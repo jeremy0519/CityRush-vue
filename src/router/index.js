@@ -8,19 +8,45 @@ const HomePage = () => import('@/views/HomePage.vue')
 const EventsList = () => import('@/views/EventsList.vue')
 const UserProfile = () => import('@/views/UserProfile.vue')
 const LoginPage = () => import('@/views/LoginPage.vue')
+const RegisterPage = () => import('@/views/RegisterPage.vue')
 
 const routes = [
   { path: '/', component: HomePage, name: 'Home' },
   { path: '/events', component: EventsList, name: 'Events' },
-  { path: '/login', component: LoginPage, name: 'Login' },
+  {
+    path: '/login',
+    component: LoginPage,
+    name: 'Login',
+    beforeEnter: (_to, _from) => {
+      // 登录页跳转前逻辑 //
+      const currentUser = Parse.User.current()
+      // 如果已经登录，则跳转到首页
+      if (currentUser) {
+        return { name: 'Home' }
+      }
+    }
+  },
+  {
+    path: '/register',
+    component: RegisterPage,
+    name: 'Register',
+    beforeEnter: (_to, _from) => {
+      // 注册页跳转前逻辑 //
+      const currentUser = Parse.User.current()
+      // 如果已经登录，则跳转到首页
+      if (currentUser) {
+        return { name: 'Home' }
+      }
+    }
+  },
   {
     path: '/me',
     component: UserProfile,
-    beforeEnter: (to, _from) => {
+    beforeEnter: (_to, _from) => {
       // 个人主页跳转前逻辑 //
       const currentUser = Parse.User.current()
       // 如果没有登录，则跳转到登录页
-      if (!currentUser && to.name !== 'Login') {
+      if (!currentUser) {
         return { name: 'Login' }
       }
     }

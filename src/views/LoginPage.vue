@@ -131,8 +131,9 @@ function handleLogin() {
           router.push('/')
         })
       })
-      .catch(() => {
+      .catch((error) => {
         loginProcessStatus.value = 3
+        alert('Error: ' + error.code + ' ' + error.message)
       })
   }
 }
