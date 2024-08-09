@@ -67,7 +67,70 @@
         <label for="usrqq">用QQ，常联系</label>
       </div>
     </div>
+    <!--endQQ-->
 
+    <!--start性别-->
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="RadioOptions"
+        id="Radio1"
+        value="male"
+        required
+        v-model="sex"
+      />
+      <label class="form-check-label text-primary" for="Radio1"
+        >男<font-awesome-icon icon="fa-solid fa-mars" class="ps-1"
+      /></label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="RadioOptions"
+        id="Radio2"
+        value="female"
+        v-model="sex"
+        required
+      />
+      <label class="form-check-label text-danger" for="Radio2"
+        >女<font-awesome-icon icon="fa-solid fa-venus" class="ps-1"
+      /></label>
+    </div>
+    <!--end性别-->
+
+    <!--start是否本校及学号-->
+    <div class="form-check d-flex justify-content-center">
+      <input
+        class="form-check-input me-1"
+        type="checkbox"
+        value=""
+        id="flexCheck"
+        v-model="isFDFZ"
+      />
+      <label class="form-check-label" for="flexCheck">是FDFZ在校学生吗？</label>
+    </div>
+    <div v-if="isFDFZ">
+      <div class="input-group has-validation">
+        <span class="input-group-text"><font-awesome-icon icon="fa-solid fa-hashtag" spin /></span>
+        <div class="form-floating">
+          <input
+            type="number"
+            class="form-control"
+            id="usrnumber"
+            placeholder="彩蛋彩蛋彩蛋"
+            :required="isFDFZ"
+            v-model.trim="stuNumber"
+          />
+          <label for="usrnumber">请填写8位学号</label>
+        </div>
+      </div>
+    </div>
+
+    <!--end是否本校及学号-->
+
+    <!--提交按钮-->
     <div>
       <font-awesome-icon
         role="button"
@@ -114,6 +177,9 @@ const password = ref('')
 const qq = ref('')
 const email = ref('')
 const signupProcessStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
+const sex = ref('')
+const isFDFZ = ref()
+const stuNumber = ref()
 function handleSignUp() {
   const form = document.getElementById('form')
   // 前端先检查有效性
@@ -124,6 +190,16 @@ function handleSignUp() {
     user.set('password', password.value)
     user.set('email', email.value)
     user.set('QQ', qq.value)
+    user.set('totalEventEnrolledTimes', 0)
+    user.set('bestRank', 0)
+    user.set('intro', 'TA很懒，没有填写个人简介')
+    user.set('sex', sex.value)
+    user.set('isFDFZ', isFDFZ.value)
+    user.set(
+      'avatarUrl',
+      'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iIzc0QzBGQyIgZD0iTTExMiA0OGE0OCA0OCAwIDEgMSA5NiAwIDQ4IDQ4IDAgMSAxIC05NiAwem00MCAzMDRsMCAxMjhjMCAxNy43LTE0LjMgMzItMzIgMzJzLTMyLTE0LjMtMzItMzJsMC0yMjMuMUw1OS40IDMwNC41Yy05LjEgMTUuMS0yOC44IDIwLTQzLjkgMTAuOXMtMjAtMjguOC0xMC45LTQzLjlsNTguMy05N2MxNy40LTI4LjkgNDguNi00Ni42IDgyLjMtNDYuNmwyOS43IDBjMzMuNyAwIDY0LjkgMTcuNyA4Mi4zIDQ2LjZsNTguMyA5N2M5LjEgMTUuMSA0LjIgMzQuOC0xMC45IDQzLjlzLTM0LjggNC4yLTQzLjktMTAuOUwyMzIgMjU2LjkgMjMyIDQ4MGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMmwwLTEyOC0xNiAweiIvPjwvc3ZnPg=='
+    )
+    user.set('stuNumber', isFDFZ.value ? stuNumber.value : undefined)
     signupProcessStatus.value = 1
     // 请求注册
     user
