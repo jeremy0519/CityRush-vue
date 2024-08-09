@@ -1,6 +1,8 @@
 # 简介
 这是FDFZ城市定向社的网站界面源码库。此项目的初衷是为了优化城定参与者（包括Player、NPC等）的体验。在2024年8月，由[@Er1cMa](https://github.com/er1cma)先提出开发城定在线化的设想，[@jeremy0519](https://github.com/jeremy0519)觉得很赞，于是项目正式启动。目前，还有很多基本功能没有实现，希望有能力的同学们积极提交discussions、pr，让我们一起把城定做的更好！
 
+预览网址：https://cityrun.pages.dev
+
 项目主要功能包括：
 - [ ] Player在城定过程中查看当前的Task&Route Info
 - [ ] Player在城定过程中查看总计已用时间和当前Task/Route花费时间
