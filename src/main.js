@@ -1,5 +1,6 @@
 // Import our custom CSS
 import './scss/styles.scss'
+import 'animate.css'
 // Import all of Bootstrap's JS
 // eslint-disable-next-line no-unused-vars
 import * as bootstrap from 'bootstrap'
@@ -19,11 +20,27 @@ import {
   faSpinner,
   faCheck,
   faXmark,
-  faHashtag
+  faHashtag,
+  faMars,
+  faVenus,
+  faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons'
 import { faQq } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
-library.add(faUser, faLock, faArrowRight, faQq, faEnvelope, faSpinner, faCheck, faXmark, faHashtag)
+library.add(
+  faUser,
+  faLock,
+  faArrowRight,
+  faQq,
+  faEnvelope,
+  faSpinner,
+  faCheck,
+  faXmark,
+  faHashtag,
+  faMars,
+  faVenus,
+  faArrowUpRightFromSquare
+)
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
