@@ -23,7 +23,7 @@ import {
   faHashtag,
   faMars,
   faVenus,
-  faArrowUpRightFromSquare
+  faCopy
 } from '@fortawesome/free-solid-svg-icons'
 import { faQq } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
@@ -39,7 +39,7 @@ library.add(
   faHashtag,
   faMars,
   faVenus,
-  faArrowUpRightFromSquare
+  faCopy
 )
 
 const app = createApp(App)
