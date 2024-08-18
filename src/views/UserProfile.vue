@@ -11,6 +11,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5">编辑个人信息</h1>
+                    <div class="text-warning ps-2">不更改请留空</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body bg-info-subtle">
@@ -22,13 +23,20 @@
                         :coordinates="imgResult.coordinates"
                         class="rounded-circle mx-auto bg-white" />
                     <form>
-                        <div class="mb-3">
-                            <label class="form-label">上传头像</label>
+                        <label class="form-label">上传头像</label>
+                        <div class="mb-3 input-group align-items-center">
                             <input
                                 class="form-control"
                                 type="file"
+                                id="avatarUpload"
                                 @change="handleFileUpload"
                                 accept="image/*" />
+                            <font-awesome-icon
+                                class="ps-1"
+                                style="cursor: pointer"
+                                @click="resetImage"
+                                size="lg"
+                                icon="fa-solid fa-circle-xmark" />
                         </div>
                         <div class="mb-3">
                             <cropper
@@ -73,13 +81,13 @@
                             <label class="form-check-label">是否为FDFZ在校学生?</label>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">8位学号</label>
+                            <label class="form-label">(如果是)8位学号</label>
                             <input type="number" class="form-control" />
                         </div>
-                        <button type="submit" class="btn btn-primary">提交</button>
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <div class="text-warning flex-grow-1">不更改请留空</div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         取消
                     </button>
@@ -215,6 +223,13 @@ async function displayCopySuccess() {
 
 //激活cropper实例
 const cropperInstance = ref(null)
+
+function resetImage() {
+    document.getElementById('avatarUpload').value = ''
+    imgResult.value = { coordinates: undefined, image: undefined }
+    imgSrc.value = ''
+}
+
 onMounted(() => {
     //激活各组件
     //激活QQ号显示和复制的tooltip
