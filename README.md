@@ -20,7 +20,9 @@
 ## 安装依赖
 先安装[nodejs v20](https://nodejs.org/zh-cn/download/package-manager)
 
+再安装yarn包管理器
 `corepack enable yarn`
+
 `yarn install`
 ## 本地运行
 `yarn run dev`
