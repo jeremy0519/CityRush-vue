@@ -1,9 +1,55 @@
-<script setup></script>
 <template>
-  <h1 class="text-center">欢迎来到FDFZ城市定向社</h1>
-  <p>
-    复旦附中城市定向社迎来了第十五个春秋，一路走来，每个假期我们都与大家一起，奔走在上海的街头，领略这座城市的魅力。城市定向社一如上海城市精神那样，海纳百川，追求卓越。我们欢迎每一位同学积极参与到城市定向赛中，也将以开放谦和的心态听取建议，不断更新进步。
-    如果你仍不了解城定是什么？城定曾经都去过哪里？有哪些有趣的题？欢迎关注FDFZ城市定向公众号，掌握城定资讯，相信不久的将来，你们都会成为城定赛的有力争冠者！
-    那么，参与城市定向赛，与我们共赴沪上之旅吧！
-  </p>
+    <h1 class="text-center">欢迎来到FDFZ城市定向社</h1>
+    <p>
+        复旦附中城市定向社迎来了第十五个春秋，一路走来，每个假期我们都与大家一起，奔走在上海的街头，领略这座城市的魅力。城市定向社一如上海城市精神那样，海纳百川，追求卓越。我们欢迎每一位同学积极参与到城市定向赛中，也将以开放谦和的心态听取建议，不断更新进步。
+        如果你仍不了解城定是什么？城定曾经都去过哪里？有哪些有趣的题？欢迎关注FDFZ城市定向公众号，掌握城定资讯，相信不久的将来，你们都会成为城定赛的有力争冠者！
+        那么，参与城市定向赛，与我们共赴沪上之旅吧！
+    </p>
+    <p>浏览量<span class="waline-pageview-count" :data-path="path"></span></p>
+    <p>评论量<span class="waline-comment-count" :data-path="path"></span></p>
+    <Waline
+        :serverURL="serverURL"
+        :path="path"
+        :emoji="emoji"
+        :login="login"
+        :reaction="reaction"
+        :pageview="pageview"
+        :imageUploader="imageUploader"
+        :comment="comment" />
 </template>
+<script setup>
+import { Waline } from 'jeremy-waline-client/component'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import Parse from 'parse/dist/parse.min.js'
+Parse.initialize('cityrun')
+Parse.serverURL = 'https://parse.hijeremy.cn/parse'
+
+import 'jeremy-waline-client/style'
+import 'jeremy-waline-client/meta'
+
+const serverURL = 'https://waline.hijeremy.cn'
+const path = computed(() => useRoute().path)
+const emoji = [
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/weibo',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/alus',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/bilibili',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/qq',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/tieba',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/tw-emoji',
+    'https://gcore.jsdelivr.net/npm/@waline/emojis@1.2.0/bmoji'
+]
+const login = 'force'
+const reaction = true
+const pageview = true
+const comment = true
+const imageUploader = async (file) => {
+    let parseFile = new Parse.File('image-comment-upload.jpg', file)
+    return parseFile
+        .save()
+        .then((file) => file.url())
+        .catch((error) => {
+            alert(error.message)
+        })
+}
+</script>

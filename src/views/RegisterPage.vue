@@ -5,11 +5,12 @@
         @keyup.enter="handleSignUp"
         id="form"
         novalidate>
-        <h4>欢迎来到FDFZ城定社!!</h4>
+        <h4 class="mb-1">欢迎来到FDFZ城定社!!</h4>
         <p class="d-inline-block fw-normal fs-5">或</p>
         <p class="d-inline-block fw-normal fs-5">
             <RouterLink to="/login" class="text-primary nav-link">登录</RouterLink>
         </p>
+        <p class="d-inline-block fw-normal fs-5">?</p>
 
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
@@ -65,7 +66,7 @@
                     placeholder="彩蛋彩蛋彩蛋"
                     required
                     v-model.trim="qq" />
-                <label>用QQ，常联系</label>
+                <label>QQ，乐在沟通</label>
             </div>
         </div>
         <!--endQQ-->
@@ -161,6 +162,7 @@ import delay from '@/helper'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import Parse from 'parse/dist/parse.min.js'
+import axios from 'axios'
 Parse.initialize('cityrun')
 Parse.serverURL = 'https://parse.hijeremy.cn/parse'
 
@@ -177,33 +179,70 @@ function handleSignUp() {
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        const user = new Parse.User()
-        user.set('username', username.value)
-        user.set('password', password.value)
-        user.set('email', email.value)
-        user.set('QQ', qq.value)
-        user.set('totalEventEnrolledTimes', 0)
-        user.set('bestRank', 0)
-        user.set('intro', 'TA很懒，没有填写个人简介')
-        user.set('sex', sex.value)
-        user.set('isFDFZ', isFDFZ.value)
-        user.set(
-            'avatarUrl',
-            'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2M0YzZkMSIgZD0iTTIyNCAxNmMtNi43IDAtMTAuOC0yLjgtMTUuNS02LjFDMjAxLjkgNS40IDE5NCAwIDE3NiAwYy0zMC41IDAtNTIgNDMuNy02NiA4OS40QzYyLjcgOTguMSAzMiAxMTIuMiAzMiAxMjhjMCAxNC4zIDI1IDI3LjEgNjQuNiAzNS45Yy0uNCA0LS42IDgtLjYgMTIuMWMwIDE3IDMuMyAzMy4yIDkuMyA0OGwtNTkuOSAwQzM4IDIyNCAzMiAyMzAgMzIgMjM3LjRjMCAxLjcgLjMgMy40IDEgNWwzOC44IDk2LjlDMjguMiAzNzEuOCAwIDQyMy44IDAgNDgyLjNDMCA0OTguNyAxMy4zIDUxMiAyOS43IDUxMmwzODguNiAwYzE2LjQgMCAyOS43LTEzLjMgMjkuNy0yOS43YzAtNTguNS0yOC4yLTExMC40LTcxLjctMTQzTDQxNSAyNDIuNGMuNi0xLjYgMS0zLjMgMS01YzAtNy40LTYtMTMuNC0xMy40LTEzLjRsLTU5LjkgMGM2LTE0LjggOS4zLTMxIDkuMy00OGMwLTQuMS0uMi04LjEtLjYtMTIuMUMzOTEgMTU1LjEgNDE2IDE0Mi4zIDQxNiAxMjhjMC0xNS44LTMwLjctMjkuOS03OC0zOC42QzMyNCA0My43IDMwMi41IDAgMjcyIDBjLTE4IDAtMjUuOSA1LjQtMzIuNSA5LjljLTQuOCAzLjMtOC44IDYuMS0xNS41IDYuMXptNTYgMjA4bC0xMi40IDBjLTE2LjUgMC0zMS4xLTEwLjYtMzYuMy0yNi4yYy0yLjMtNy0xMi4yLTctMTQuNSAwYy01LjIgMTUuNi0xOS45IDI2LjItMzYuMyAyNi4yTDE2OCAyMjRjLTIyLjEgMC00MC0xNy45LTQwLTQwbDAtMTQuNGMyOC4yIDQuMSA2MSA2LjQgOTYgNi40czY3LjgtMi4zIDk2LTYuNGwwIDE0LjRjMCAyMi4xLTE3LjkgNDAtNDAgNDB6bS04OCA5NmwxNiAzMkwxNzYgNDgwIDEyOCAyODhsNjQgMzJ6bTEyOC0zMkwyNzIgNDgwIDI0MCAzNTJsMTYtMzIgNjQtMzJ6Ii8+PC9zdmc+'
-        )
-        user.set('stuNumber', isFDFZ.value ? stuNumber.value : undefined)
         signupProcessStatus.value = 1
-        // 请求注册
-        user.signUp()
+        // 先注册waline
+        axios.defaults.baseURL = 'https://waline.hijeremy.cn/api/'
+        axios.defaults.timeout = 10000
+        // Add a response interceptor
+        axios.interceptors.response.use(
+            function (response) {
+                // Any status code that lie within the range of 2xx cause this function to trigger
+                if (response.data.errno != 0) {
+                    console.log('error capture')
+                    return Promise.reject(response)
+                } else {
+                    return response
+                }
+            },
+            function (error) {
+                // Any status codes that falls outside the range of 2xx cause this function to trigger
+                return Promise.reject(error)
+            }
+        )
+        axios
+            .post('/user?lang=zh-CN', {
+                display_name: username.value,
+                email: email.value,
+                url: '',
+                password: password.value
+            })
+            .then(() => {
+                // 再注册parse
+                const user = new Parse.User()
+                user.set('username', username.value)
+                user.set('password', password.value)
+                user.set('email', email.value)
+                user.set('QQ', qq.value)
+                user.set('totalEventEnrolledTimes', 0)
+                user.set('bestRank', 0)
+                user.set('intro', 'TA很懒，没有填写个人简介')
+                user.set('sex', sex.value)
+                user.set('isFDFZ', isFDFZ.value)
+                user.set(
+                    'avatarUrl',
+                    'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2M0YzZkMSIgZD0iTTIyNCAxNmMtNi43IDAtMTAuOC0yLjgtMTUuNS02LjFDMjAxLjkgNS40IDE5NCAwIDE3NiAwYy0zMC41IDAtNTIgNDMuNy02NiA4OS40QzYyLjcgOTguMSAzMiAxMTIuMiAzMiAxMjhjMCAxNC4zIDI1IDI3LjEgNjQuNiAzNS45Yy0uNCA0LS42IDgtLjYgMTIuMWMwIDE3IDMuMyAzMy4yIDkuMyA0OGwtNTkuOSAwQzM4IDIyNCAzMiAyMzAgMzIgMjM3LjRjMCAxLjcgLjMgMy40IDEgNWwzOC44IDk2LjlDMjguMiAzNzEuOCAwIDQyMy44IDAgNDgyLjNDMCA0OTguNyAxMy4zIDUxMiAyOS43IDUxMmwzODguNiAwYzE2LjQgMCAyOS43LTEzLjMgMjkuNy0yOS43YzAtNTguNS0yOC4yLTExMC40LTcxLjctMTQzTDQxNSAyNDIuNGMuNi0xLjYgMS0zLjMgMS01YzAtNy40LTYtMTMuNC0xMy40LTEzLjRsLTU5LjkgMGM2LTE0LjggOS4zLTMxIDkuMy00OGMwLTQuMS0uMi04LjEtLjYtMTIuMUMzOTEgMTU1LjEgNDE2IDE0Mi4zIDQxNiAxMjhjMC0xNS44LTMwLjctMjkuOS03OC0zOC42QzMyNCA0My43IDMwMi41IDAgMjcyIDBjLTE4IDAtMjUuOSA1LjQtMzIuNSA5LjljLTQuOCAzLjMtOC44IDYuMS0xNS41IDYuMXptNTYgMjA4bC0xMi40IDBjLTE2LjUgMC0zMS4xLTEwLjYtMzYuMy0yNi4yYy0yLjMtNy0xMi4yLTctMTQuNSAwYy01LjIgMTUuNi0xOS45IDI2LjItMzYuMyAyNi4yTDE2OCAyMjRjLTIyLjEgMC00MC0xNy45LTQwLTQwbDAtMTQuNGMyOC4yIDQuMSA2MSA2LjQgOTYgNi40czY3LjgtMi4zIDk2LTYuNGwwIDE0LjRjMCAyMi4xLTE3LjkgNDAtNDAgNDB6bS04OCA5NmwxNiAzMkwxNzYgNDgwIDEyOCAyODhsNjQgMzJ6bTEyOC0zMkwyNzIgNDgwIDI0MCAzNTJsMTYtMzIgNjQtMzJ6Ii8+PC9zdmc+'
+                )
+                user.set('stuNumber', isFDFZ.value ? stuNumber.value : undefined)
+                // 请求注册
+                return user.signUp()
+            })
             .then(() => {
                 signupProcessStatus.value = 2
-                delay(700).then(() => {
+                delay(600).then(() => {
                     router.push('/')
                 })
             })
             .catch((error) => {
                 signupProcessStatus.value = 3
-                alert('Error: ' + error.code + ' ' + error.message)
+                console.log(error)
+                if (error.data) {
+                    alert(error.data.errmsg)
+                } else if (error.message) {
+                    alert(error.message)
+                } else {
+                    console.log(error)
+                    alert('遇到未知错误:(')
+                }
             })
     }
 }
