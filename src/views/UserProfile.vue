@@ -14,75 +14,68 @@
                     <div class="text-warning ps-2">不更改请留空</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body bg-info-subtle">
-                    <preview
-                        v-show="imgSrc"
-                        :width="150"
-                        :height="150"
-                        :image="imgResult.image"
-                        :coordinates="imgResult.coordinates"
-                        class="rounded-circle mx-auto bg-white" />
+                <div class="modal-body bg-success-subtle">
                     <form>
-                        <label class="form-label">上传头像</label>
-                        <div class="mb-3 input-group align-items-center">
-                            <input
-                                class="form-control"
-                                type="file"
-                                id="avatarUpload"
-                                @change="handleFileUpload"
-                                accept="image/*" />
-                            <font-awesome-icon
-                                class="ps-1"
-                                style="cursor: pointer"
-                                @click="resetImage"
-                                size="lg"
-                                icon="fa-solid fa-circle-xmark" />
-                        </div>
-                        <div class="mb-3">
-                            <cropper
-                                v-show="imgSrc"
-                                ref="cropperInstance"
-                                :stencil-component="CircleStencil"
-                                :src="imgSrc"
-                                :auto-zoom="true"
-                                @change="onImgChange"
-                                :debounce="false"
-                                image-restriction="stencil"
-                                backgroundClass="bg-white"
-                                class="cropper mx-auto" />
-                        </div>
                         <div class="mb-3">
                             <label class="form-label">昵称</label>
-                            <input type="text" class="form-control" />
-                            <div class="form-text">“名”不惊人死不休</div>
+                            <input type="text" class="form-control" v-model.trim="newUsername" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">邮箱</label>
-                            <input type="email" class="form-control" />
+                            <input type="email" class="form-control" v-model.trim="newEmail" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">密码</label>
-                            <input type="password" class="form-control" />
+                            <input
+                                type="password"
+                                class="form-control"
+                                v-model.trim="newPassword" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">QQ</label>
-                            <input type="text" class="form-control" />
+                            <input type="text" class="form-control" v-model.trim="newQQ" />
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="RadioOptions" />
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="RadioOptions"
+                                v-model="newSex" />
                             <label class="form-check-label"> 男 </label>
                         </div>
                         <div class="form-check form-check-inline mb-3">
-                            <input class="form-check-input" type="radio" name="RadioOptions" />
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="RadioOptions"
+                                v-model="newSex" />
                             <label class="form-check-label"> 女 </label>
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" />
+                            <input type="checkbox" class="form-check-input" v-model="newIsFDFZ" />
                             <label class="form-check-label">是否为FDFZ在校学生?</label>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">(如果是)8位学号</label>
-                            <input type="number" class="form-control" />
+                            <input type="number" class="form-control" v-model="newStuNumber" />
+                        </div>
+                        <div>
+                            <font-awesome-icon
+                                v-if="processStatus == 1"
+                                icon="fa-solid fa-spinner"
+                                class="mt-1 text-secondary"
+                                size="2xl"
+                                spin />
+                            <font-awesome-icon
+                                v-else-if="processStatus == 2"
+                                class="mt-1 text-success"
+                                icon="fa-solid fa-check"
+                                size="2xl" />
+                            <font-awesome-icon
+                                v-else-if="processStatus == 3"
+                                class="mt-1 text-danger"
+                                icon="fa-solid fa-xmark"
+                                size="2xl" />
                         </div>
                     </form>
                 </div>
@@ -91,7 +84,9 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         取消
                     </button>
-                    <button type="button" class="btn btn-primary" @click="getbase64">保存</button>
+                    <button type="button" class="btn btn-primary" @click="updateProfile">
+                        保存
+                    </button>
                 </div>
             </div>
         </div>
@@ -172,62 +167,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-//---------------Image-Crop-----------------
-import { Cropper, CircleStencil, Preview } from 'vue-advanced-cropper'
-import 'vue-advanced-cropper/dist/style.css'
-const imgSrc = ref('')
-const imgResult = ref({
-    //用于显示预览
-    coordinates: undefined,
-    image: undefined
-})
-function onImgChange({ coordinates, image }) {
-    //用于显示预览
-    imgResult.value = {
-        coordinates,
-        image
-    }
-}
-
-//本地上传图片
-function handleFileUpload(event) {
-    const file = event.target.files[0]
-    if (file) {
-        const reader = new FileReader()
-        reader.onload = () => {
-            imgSrc.value = reader.result
-        }
-        reader.readAsDataURL(file)
-    }
-}
-
-//上传到服务器
-function getbase64() {
-    console.log(cropperInstance.value.getResult().image)
-}
-
-import Parse from 'parse/dist/parse.min.js'
-Parse.initialize('cityrun')
-Parse.serverURL = 'https://parse.hijeremy.cn/parse'
-
-//激活组件准备工作
 import { Tooltip } from 'bootstrap'
 import ClipboardJS from 'clipboard'
 import delay from '@/helper'
+
 async function displayCopySuccess() {
     const tooltip = Tooltip.getInstance('#copyButton')
     tooltip.show()
     await delay(2000)
     tooltip.hide()
-}
-
-//激活cropper实例
-const cropperInstance = ref(null)
-
-function resetImage() {
-    document.getElementById('avatarUpload').value = ''
-    imgResult.value = { coordinates: undefined, image: undefined }
-    imgSrc.value = ''
 }
 
 onMounted(() => {
@@ -250,12 +198,11 @@ onMounted(() => {
             e.clearSelection()
         })
     })
-
-    //激活编辑modal
-    document.getElementById('modal').addEventListener('shown.bs.modal', () => {
-        cropperInstance.value.refresh()
-    })
 })
+
+//----------------上传更改到服务器-----------------
+const processStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
+function updateProfile() {}
 </script>
 
 <style scoped>
@@ -266,9 +213,5 @@ onMounted(() => {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-}
-.cropper {
-    width: 300px;
-    height: 300px;
 }
 </style>

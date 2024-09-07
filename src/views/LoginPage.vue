@@ -106,9 +106,6 @@ import { ref } from 'vue'
 import delay from '@/helper'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-import Parse from 'parse/dist/parse.min.js'
-Parse.initialize('cityrun')
-Parse.serverURL = 'https://parse.hijeremy.cn/parse'
 
 const resetShowed = ref(false)
 const emailToBeSent = ref('')
