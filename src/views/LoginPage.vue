@@ -1,10 +1,5 @@
 <template>
-    <form
-        style="width: 300px"
-        class="mx-auto text-center mt-3"
-        @keyup.enter="handleLogin"
-        id="form1"
-        novalidate>
+    <form style="width: 300px" class="mx-auto text-center mt-3" id="form1" novalidate>
         <h4 class="d-inline-block">请登录或</h4>
         <h4 class="d-inline-block">
             <RouterLink to="/register" class="text-primary nav-link">注册</RouterLink>
@@ -12,16 +7,16 @@
 
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-user" beat-fade
+                ><font-awesome-icon icon="fa-solid fa-envelope" beat-fade
             /></span>
             <div class="form-floating">
                 <input
-                    type="text"
+                    type="email"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
                     required
-                    v-model.trim="usernameToLogin" />
-                <label>昵称</label>
+                    v-model.trim="emailToLogin" />
+                <label>邮箱</label>
             </div>
         </div>
 
@@ -39,31 +34,14 @@
                 <label>密码</label>
             </div>
         </div>
-        <div>
+        <div class="mt-1 d-flex align-items-center justify-content-center">
             <font-awesome-icon
                 role="button"
                 icon="fa-solid fa-arrow-right"
-                class="mt-1 text-info"
+                class="text-info"
                 size="2xl"
                 @click.stop.prevent="handleLogin" />
-        </div>
-        <div>
-            <font-awesome-icon
-                v-if="loginProcessStatus == 1"
-                icon="fa-solid fa-spinner"
-                class="mt-1 text-secondary"
-                size="2xl"
-                spin />
-            <font-awesome-icon
-                v-else-if="loginProcessStatus == 2"
-                class="mt-1 text-success"
-                icon="fa-solid fa-check"
-                size="2xl" />
-            <font-awesome-icon
-                v-else-if="loginProcessStatus == 3"
-                class="mt-1 text-danger"
-                icon="fa-solid fa-xmark"
-                size="2xl" />
+            <div v-if="isLoading" class="spinner-border text-success ms-2" role="status"></div>
         </div>
 
         <button
@@ -86,7 +64,7 @@
             /></span>
             <div class="form-floating">
                 <input
-                    type="text"
+                    type="email"
                     class="form-control"
                     id="resetemail"
                     placeholder="彩蛋彩蛋彩蛋"
@@ -96,39 +74,48 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-outline-success mt-1" @click="sendEmail">
+        <button type="button" class="btn btn-outline-success mt-1" @click.stop.prevent="sendEmail">
             发送密码重置邮件
         </button>
     </form>
 </template>
 <script setup>
+import Swal from 'sweetalert2'
 import { ref } from 'vue'
-import delay from '@/helper'
+import { Toast, reset_password_url } from '@/helper'
 import { useRouter } from 'vue-router'
+import { account } from '@/helper'
 const router = useRouter()
 
 const resetShowed = ref(false)
 const emailToBeSent = ref('')
-const usernameToLogin = ref('')
+const emailToLogin = ref('')
 const passwordToLogin = ref('')
-const loginProcessStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
+
+const isLoading = ref(false)
+
 function handleLogin() {
     const form = document.getElementById('form1')
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        loginProcessStatus.value = 1
+        isLoading.value = true
         // 请求登录
-        Parse.User.logIn(usernameToLogin.value, passwordToLogin.value)
-            .then(() => {
-                loginProcessStatus.value = 2
-                delay(700).then(() => {
-                    router.push('/')
-                })
+        account
+            .createEmailPasswordSession(emailToLogin.value, passwordToLogin.value)
+            .then((response) => {
+                isLoading.value = false
+                console.log(response)
+                Toast.fire({ icon: 'success', title: '成功登录' })
+                router.push({ name: 'Home' })
             })
             .catch((error) => {
-                loginProcessStatus.value = 3
-                alert('Error: ' + error.code + ' ' + error.message)
+                isLoading.value = false
+                Swal.fire({
+                    icon: 'error',
+                    title: '登录失败...',
+                    text: error.message
+                })
             })
     }
 }
@@ -139,14 +126,20 @@ function sendEmail() {
     form.classList.add('was-validated')
     if (form.checkValidity()) {
         // 请求发送重置密码邮件
-        Parse.User.requestPasswordReset(emailToBeSent.value)
-            .then(() => {
-                // Password reset request was sent successfully
-                alert('Password reset request was sent successfully')
+        account
+            .createRecovery(emailToBeSent.value, reset_password_url)
+            .then((response) => {
+                console.log(response)
+                Toast.fire({ icon: 'success', title: '成功发送密码重置邮件' })
+                router.push({ name: 'Home' })
             })
             .catch((error) => {
-                // Show the error message somewhere
-                alert('Error: ' + error.code + ' ' + error.message)
+                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: '发送密码重置邮件失败...',
+                    text: error.message
+                })
             })
     }
 }

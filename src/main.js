@@ -2,8 +2,7 @@
 import './scss/styles.scss'
 import 'animate.css'
 // Import all of Bootstrap's JS
-// eslint-disable-next-line no-unused-vars
-import * as bootstrap from 'bootstrap'
+//import * as bootstrap from 'bootstrap'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -17,32 +16,14 @@ import {
     faLock,
     faArrowRight,
     faEnvelope,
-    faSpinner,
-    faCheck,
-    faXmark,
     faHashtag,
     faMars,
     faVenus,
-    faCopy,
-    faCircleXmark
+    faCopy
 } from '@fortawesome/free-solid-svg-icons'
 import { faQq } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
-library.add(
-    faUser,
-    faLock,
-    faArrowRight,
-    faQq,
-    faEnvelope,
-    faSpinner,
-    faCheck,
-    faXmark,
-    faHashtag,
-    faMars,
-    faVenus,
-    faCopy,
-    faCircleXmark
-)
+library.add(faUser, faLock, faArrowRight, faQq, faEnvelope, faHashtag, faMars, faVenus, faCopy)
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)

@@ -5,6 +5,7 @@ const EventsList = () => import('@/views/EventsList.vue')
 const UserProfile = () => import('@/views/UserProfile.vue')
 const LoginPage = () => import('@/views/LoginPage.vue')
 const RegisterPage = () => import('@/views/RegisterPage.vue')
+const ResetPassword = () => import('@/views/ResetPassword.vue')
 
 import { account } from '@/helper'
 
@@ -15,7 +16,7 @@ const routes = [
         path: '/login',
         component: LoginPage,
         name: 'Login',
-        beforeEnter: async (_to, _from) => {
+        beforeEnter: async () => {
             // 登录页跳转前逻辑 //
             try {
                 const currentUser = await account.get()
@@ -32,7 +33,7 @@ const routes = [
         path: '/register',
         component: RegisterPage,
         name: 'Register',
-        beforeEnter: async (_to, _from) => {
+        beforeEnter: async () => {
             // 注册页跳转前逻辑 //
             try {
                 const currentUser = await account.get()
@@ -59,7 +60,18 @@ const routes = [
             } catch (e) {
                 return { name: 'Login' }
             }
-        }
+        },
+        name: 'Profile'
+    },
+    {
+        path: '/resetpassword',
+        component: ResetPassword,
+        beforeEnter: async (to) => {
+            if (!to.query.userId || !to.query.secret) {
+                return { name: 'Home' }
+            }
+        },
+        name: 'ResetPassword'
     },
     { path: '/:pathMatch(.*)', component: NotFoundComponent }
 ]

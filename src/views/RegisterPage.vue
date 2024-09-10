@@ -1,15 +1,10 @@
 <template>
-    <form
-        style="width: 300px"
-        class="mx-auto text-center mt-3"
-        @keyup.enter="handleSignUp"
-        id="form"
-        novalidate>
+    <form style="width: 300px" class="mx-auto text-center mt-3" id="form" novalidate>
         <h4 class="mb-1">欢迎来到FDFZ城定社!!</h4>
-        <p class="d-inline-block fw-normal fs-5">或</p>
-        <p class="d-inline-block fw-normal fs-5">
+        <h5 class="d-inline-block fw-normal">或</h5>
+        <h5 class="d-inline-block fw-normal">
             <RouterLink to="/login" class="text-primary nav-link">登录</RouterLink>
-        </p>
+        </h5>
         <p class="d-inline-block fw-normal fs-5">?</p>
 
         <div class="input-group has-validation mt-1 mb-1">
@@ -79,7 +74,7 @@
                 name="RadioOptions"
                 value="male"
                 required
-                v-model="sex" />
+                v-model="gender" />
             <label class="form-check-label text-primary"
                 >男<font-awesome-icon icon="fa-solid fa-mars" class="ps-1"
             /></label>
@@ -90,7 +85,7 @@
                 type="radio"
                 name="RadioOptions"
                 value="female"
-                v-model="sex"
+                v-model="gender"
                 required />
             <label class="form-check-label text-danger"
                 >女<font-awesome-icon icon="fa-solid fa-venus" class="ps-1"
@@ -128,91 +123,82 @@
         <!--end是否本校及学号-->
 
         <!--提交按钮-->
-        <div>
+        <div class="d-flex align-items-center justify-content-center">
             <font-awesome-icon
                 role="button"
                 icon="fa-solid fa-arrow-right"
-                class="mt-1 text-info"
+                class="text-info"
                 size="2xl"
                 @click.stop.prevent="handleSignUp" />
-        </div>
-        <div>
-            <font-awesome-icon
-                v-if="signupProcessStatus == 1"
-                icon="fa-solid fa-spinner"
-                class="mt-1 text-secondary"
-                size="2xl"
-                spin />
-            <font-awesome-icon
-                v-else-if="signupProcessStatus == 2"
-                class="mt-1 text-success"
-                icon="fa-solid fa-check"
-                size="2xl" />
-            <font-awesome-icon
-                v-else-if="signupProcessStatus == 3"
-                class="mt-1 text-danger"
-                icon="fa-solid fa-xmark"
-                size="2xl" />
+            <div v-if="isLoading" class="spinner-border text-success ms-2" role="status"></div>
         </div>
     </form>
 </template>
 <script setup>
 import { ref } from 'vue'
-import delay from '@/helper'
+import { ID, Permission, Role } from 'appwrite'
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
+import { Toast } from '@/helper'
+import { account, databases, database_id, users_collection_id } from '@/helper'
 const router = useRouter()
 
 const username = ref('')
 const password = ref('')
 const qq = ref('')
 const email = ref('')
-const signupProcessStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
-const sex = ref('')
+const gender = ref('')
 const isFDFZ = ref()
 const stuNumber = ref()
+
+const isLoading = ref(false)
+
 function handleSignUp() {
     const form = document.getElementById('form')
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        signupProcessStatus.value = 1
-        // 注册parse
-        const user = new Parse.User()
-        user.set('username', username.value)
-        user.set('password', password.value)
-        user.set('email', email.value)
-        user.set('QQ', qq.value)
-        user.set('totalEventEnrolledTimes', 0)
-        user.set('bestRank', 0)
-        user.set('intro', 'TA很懒，没有填写个人简介')
-        user.set('sex', sex.value)
-        user.set('isFDFZ', isFDFZ.value)
-        user.set(
-            'avatarUrl',
-            'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2M0YzZkMSIgZD0iTTIyNCAxNmMtNi43IDAtMTAuOC0yLjgtMTUuNS02LjFDMjAxLjkgNS40IDE5NCAwIDE3NiAwYy0zMC41IDAtNTIgNDMuNy02NiA4OS40QzYyLjcgOTguMSAzMiAxMTIuMiAzMiAxMjhjMCAxNC4zIDI1IDI3LjEgNjQuNiAzNS45Yy0uNCA0LS42IDgtLjYgMTIuMWMwIDE3IDMuMyAzMy4yIDkuMyA0OGwtNTkuOSAwQzM4IDIyNCAzMiAyMzAgMzIgMjM3LjRjMCAxLjcgLjMgMy40IDEgNWwzOC44IDk2LjlDMjguMiAzNzEuOCAwIDQyMy44IDAgNDgyLjNDMCA0OTguNyAxMy4zIDUxMiAyOS43IDUxMmwzODguNiAwYzE2LjQgMCAyOS43LTEzLjMgMjkuNy0yOS43YzAtNTguNS0yOC4yLTExMC40LTcxLjctMTQzTDQxNSAyNDIuNGMuNi0xLjYgMS0zLjMgMS01YzAtNy40LTYtMTMuNC0xMy40LTEzLjRsLTU5LjkgMGM2LTE0LjggOS4zLTMxIDkuMy00OGMwLTQuMS0uMi04LjEtLjYtMTIuMUMzOTEgMTU1LjEgNDE2IDE0Mi4zIDQxNiAxMjhjMC0xNS44LTMwLjctMjkuOS03OC0zOC42QzMyNCA0My43IDMwMi41IDAgMjcyIDBjLTE4IDAtMjUuOSA1LjQtMzIuNSA5LjljLTQuOCAzLjMtOC44IDYuMS0xNS41IDYuMXptNTYgMjA4bC0xMi40IDBjLTE2LjUgMC0zMS4xLTEwLjYtMzYuMy0yNi4yYy0yLjMtNy0xMi4yLTctMTQuNSAwYy01LjIgMTUuNi0xOS45IDI2LjItMzYuMyAyNi4yTDE2OCAyMjRjLTIyLjEgMC00MC0xNy45LTQwLTQwbDAtMTQuNGMyOC4yIDQuMSA2MSA2LjQgOTYgNi40czY3LjgtMi4zIDk2LTYuNGwwIDE0LjRjMCAyMi4xLTE3LjkgNDAtNDAgNDB6bS04OCA5NmwxNiAzMkwxNzYgNDgwIDEyOCAyODhsNjQgMzJ6bTEyOC0zMkwyNzIgNDgwIDI0MCAzNTJsMTYtMzIgNjQtMzJ6Ii8+PC9zdmc+'
-        )
-        user.set('stuNumber', isFDFZ.value ? stuNumber.value : undefined)
-        // 请求注册
-        return (
-            user
-                .signUp()
-                //})
-                .then(() => {
-                    signupProcessStatus.value = 2
-                    delay(600).then(() => {
-                        router.push('/')
-                    })
+        isLoading.value = true
+        // 注册appwrite
+        const tempID = ID.unique()
+        account
+            .create(tempID, email.value, password.value)
+            .then((response) => {
+                console.log(response)
+                return account.createEmailPasswordSession(email.value, password.value)
+            })
+            .then((response) => {
+                console.log(response)
+                return databases.createDocument(
+                    database_id,
+                    users_collection_id,
+                    ID.unique(),
+                    {
+                        user_id: tempID,
+                        username: username.value,
+                        email: email.value,
+                        QQ: qq.value,
+                        totalEventEnrolledTimes: 0,
+                        gender: gender.value,
+                        isFDFZ: isFDFZ.value,
+                        stuNumber: isFDFZ.value ? stuNumber.value : null
+                    },
+                    [Permission.write(Role.user(tempID))]
+                )
+            })
+            .then((response) => {
+                console.log(response)
+                Toast.fire({ icon: 'success', title: '成功注册' })
+                router.push({ name: 'Home' })
+            })
+            .catch((error) => {
+                isLoading.value = false
+                Swal.fire({
+                    icon: 'error',
+                    title: '注册失败...',
+                    text: error.message
                 })
-                .catch((error) => {
-                    signupProcessStatus.value = 3
-                    if (error.message) {
-                        alert(error.message)
-                    } else {
-                        console.log(error)
-                        alert('遇到未知错误:(')
-                    }
-                })
-        )
+            })
     }
 }
 </script>

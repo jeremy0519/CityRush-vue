@@ -40,7 +40,7 @@
                                 class="form-check-input"
                                 type="radio"
                                 name="RadioOptions"
-                                v-model="newSex" />
+                                v-model="newGender" />
                             <label class="form-check-label"> 男 </label>
                         </div>
                         <div class="form-check form-check-inline mb-3">
@@ -48,7 +48,7 @@
                                 class="form-check-input"
                                 type="radio"
                                 name="RadioOptions"
-                                v-model="newSex" />
+                                v-model="newGender" />
                             <label class="form-check-label"> 女 </label>
                         </div>
                         <div class="mb-3 form-check">
@@ -58,24 +58,6 @@
                         <div class="mb-3">
                             <label class="form-label">(如果是)8位学号</label>
                             <input type="number" class="form-control" v-model="newStuNumber" />
-                        </div>
-                        <div>
-                            <font-awesome-icon
-                                v-if="processStatus == 1"
-                                icon="fa-solid fa-spinner"
-                                class="mt-1 text-secondary"
-                                size="2xl"
-                                spin />
-                            <font-awesome-icon
-                                v-else-if="processStatus == 2"
-                                class="mt-1 text-success"
-                                icon="fa-solid fa-check"
-                                size="2xl" />
-                            <font-awesome-icon
-                                v-else-if="processStatus == 3"
-                                class="mt-1 text-danger"
-                                icon="fa-solid fa-xmark"
-                                size="2xl" />
                         </div>
                     </form>
                 </div>
@@ -93,17 +75,10 @@
     </div>
 
     <!--个人信息展示卡-->
-    <div class="p-4 mx-auto border border-0" style="width: 350px">
+    <div class="mx-auto border border-0" style="width: 350px">
         <div class="image d-flex flex-column justify-content-center align-items-center">
-            <!--头像-->
-            <img
-                class="rounded-pill img-fluid border-4 border-success border-opacity-50 border"
-                height="150"
-                width="150"
-                src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2M0YzZkMSIgZD0iTTIyNCAxNmMtNi43IDAtMTAuOC0yLjgtMTUuNS02LjFDMjAxLjkgNS40IDE5NCAwIDE3NiAwYy0zMC41IDAtNTIgNDMuNy02NiA4OS40QzYyLjcgOTguMSAzMiAxMTIuMiAzMiAxMjhjMCAxNC4zIDI1IDI3LjEgNjQuNiAzNS45Yy0uNCA0LS42IDgtLjYgMTIuMWMwIDE3IDMuMyAzMy4yIDkuMyA0OGwtNTkuOSAwQzM4IDIyNCAzMiAyMzAgMzIgMjM3LjRjMCAxLjcgLjMgMy40IDEgNWwzOC44IDk2LjlDMjguMiAzNzEuOCAwIDQyMy44IDAgNDgyLjNDMCA0OTguNyAxMy4zIDUxMiAyOS43IDUxMmwzODguNiAwYzE2LjQgMCAyOS43LTEzLjMgMjkuNy0yOS43YzAtNTguNS0yOC4yLTExMC40LTcxLjctMTQzTDQxNSAyNDIuNGMuNi0xLjYgMS0zLjMgMS01YzAtNy40LTYtMTMuNC0xMy40LTEzLjRsLTU5LjkgMGM2LTE0LjggOS4zLTMxIDkuMy00OGMwLTQuMS0uMi04LjEtLjYtMTIuMUMzOTEgMTU1LjEgNDE2IDE0Mi4zIDQxNiAxMjhjMC0xNS44LTMwLjctMjkuOS03OC0zOC42QzMyNCA0My43IDMwMi41IDAgMjcyIDBjLTE4IDAtMjUuOSA1LjQtMzIuNSA5LjljLTQuOCAzLjMtOC44IDYuMS0xNS41IDYuMXptNTYgMjA4bC0xMi40IDBjLTE2LjUgMC0zMS4xLTEwLjYtMzYuMy0yNi4yYy0yLjMtNy0xMi4yLTctMTQuNSAwYy01LjIgMTUuNi0xOS45IDI2LjItMzYuMyAyNi4yTDE2OCAyMjRjLTIyLjEgMC00MC0xNy45LTQwLTQwbDAtMTQuNGMyOC4yIDQuMSA2MSA2LjQgOTYgNi40czY3LjgtMi4zIDk2LTYuNGwwIDE0LjRjMCAyMi4xLTE3LjkgNDAtNDAgNDB6bS04OCA5NmwxNiAzMkwxNzYgNDgwIDEyOCAyODhsNjQgMzJ6bTEyOC0zMkwyNzIgNDgwIDI0MCAzNTJsMTYtMzIgNjQtMzJ6Ii8+PC9zdmc+" />
-
             <!--昵称-->
-            <span class="name mt-2 fw-bold fs-1">Eleanor Pena</span>
+            <span class="name mt-5 fw-bold fs-1">Eleanor Pena</span>
 
             <!--最佳名次-->
             <span
@@ -149,13 +124,19 @@
             >
 
             <!--编辑按钮-->
-            <button
-                type="button"
-                class="btn btn-outline-primary mt-4"
-                data-bs-toggle="modal"
-                data-bs-target="#modal">
-                编辑信息
-            </button>
+            <div class="d-inline mt-4">
+                <button
+                    type="button"
+                    class="btn btn-outline-primary me-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal">
+                    编辑信息
+                </button>
+
+                <button type="button" class="btn btn-outline-warning ms-1" @click="logout">
+                    退出登录
+                </button>
+            </div>
         </div>
     </div>
 
@@ -166,10 +147,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 import { Tooltip } from 'bootstrap'
 import ClipboardJS from 'clipboard'
-import delay from '@/helper'
+import { delay } from '@/helper'
+import { account } from '@/helper'
 
 async function displayCopySuccess() {
     const tooltip = Tooltip.getInstance('#copyButton')
@@ -203,6 +186,12 @@ onMounted(() => {
 //----------------上传更改到服务器-----------------
 const processStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
 function updateProfile() {}
+function logout() {
+    account.deleteSession('current').then((response) => {
+        console.log(response)
+        router.push({ name: 'Home' })
+    })
+}
 </script>
 
 <style scoped>
