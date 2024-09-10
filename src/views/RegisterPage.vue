@@ -148,7 +148,7 @@ const password = ref('')
 const qq = ref('')
 const email = ref('')
 const gender = ref('')
-const isFDFZ = ref()
+const isFDFZ = ref(false)
 const stuNumber = ref()
 
 const isLoading = ref(false)

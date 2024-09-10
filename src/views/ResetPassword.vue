@@ -1,7 +1,7 @@
 <template>
     <form id="form" novalidate>
         <p class="form-label mt-3">请输入新密码:</p>
-        <input type="text" class="form-control" required v-model="newPassword" />
+        <input type="password" class="form-control" required v-model="newPassword" />
         <div class="mt-1 d-flex align-items-center justify-content-center">
             <font-awesome-icon
                 role="button"
@@ -22,7 +22,6 @@ import Swal from 'sweetalert2'
 const route = useRoute()
 const router = useRouter()
 
-const resetProcessStatus = ref(0)
 const newPassword = ref('')
 
 const isLoading = ref(false)
@@ -36,13 +35,17 @@ function handleReset() {
         account
             .updateRecovery(route.query.userId, route.query.secret, newPassword.value)
             .then((response) => {
-                resetProcessStatus.value = 2
+                Toast.fire({ icon: 'success', text: '成功重置密码' })
                 console.log(response)
-                delay(600).then(() => router.push({ name: 'Home' }))
+                router.push({ name: 'Login' })
             })
             .catch((error) => {
-                resetProcessStatus.value = 3
-                alert(error.message)
+                isLoading.value = false
+                Swal.fire({
+                    icon: 'error',
+                    title: '重置密码失败...',
+                    text: error.message
+                })
             })
     }
 }
