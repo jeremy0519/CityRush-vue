@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md bg-success-subtle">
+    <nav class="navbar navbar-expand-sm bg-success-subtle">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img
@@ -15,10 +15,10 @@
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbar">
-                <span class="navbar-toggler-icon"></span>
+                <FontAwesomeIcon icon="fa-solid fa-bars" />
             </button>
             <div id="navbar" class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     <li class="nav-item">
                         <RouterLink to="/" class="nav-link" active-class="active">首页</RouterLink>
                     </li>
@@ -49,4 +49,6 @@
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+// eslint-disable-next-line no-unused-vars
+import { Collapse } from 'bootstrap'
 </script>
