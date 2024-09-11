@@ -17,24 +17,24 @@
                 data-bs-target="#navbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbar">
+            <div id="navbar" class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <RouterLink to="/" class="nav-link" activeClass="active">首页</RouterLink>
+                        <RouterLink to="/" class="nav-link" active-class="active">首页</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <RouterLink to="/events" class="nav-link" activeClass="active"
+                        <RouterLink to="/events" class="nav-link" active-class="active"
                             >活动列表</RouterLink
                         >
                     </li>
                     <li class="nav-item">
-                        <RouterLink to="/me" class="nav-link" activeClass="active"
+                        <RouterLink to="/me" class="nav-link" active-class="active"
                             >个人主页</RouterLink
                         >
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <RouterLink to="/match" class="me-3 nav-link text-primary" activeClass="active"
+                    <RouterLink to="/match" class="me-3 nav-link text-primary" active-class="active"
                         >进入比赛</RouterLink
                     >
                 </div>

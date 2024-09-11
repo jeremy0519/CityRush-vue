@@ -1,5 +1,5 @@
 <template>
-    <form style="width: 300px" class="mx-auto text-center mt-3" id="form1" novalidate>
+    <form id="form1" style="width: 300px" class="mx-auto text-center mt-3" novalidate>
         <h4 class="d-inline-block">请登录或</h4>
         <h4 class="d-inline-block">
             <RouterLink to="/register" class="text-primary nav-link">注册</RouterLink>
@@ -7,35 +7,33 @@
 
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-envelope" beat-fade
+                ><FontAwesomeIcon icon="fa-solid fa-envelope" beat-fade
             /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="emailToLogin"
                     type="email"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="emailToLogin" />
+                    required />
                 <label>邮箱</label>
             </div>
         </div>
 
         <div class="input-group has-validation">
-            <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-lock" bounce
-            /></span>
+            <span class="input-group-text"><FontAwesomeIcon icon="fa-solid fa-lock" bounce /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="passwordToLogin"
                     type="password"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="passwordToLogin" />
+                    required />
                 <label>密码</label>
             </div>
         </div>
         <div class="mt-1 d-flex align-items-center justify-content-center">
-            <font-awesome-icon
+            <FontAwesomeIcon
                 role="button"
                 icon="fa-solid fa-arrow-right"
                 class="text-info"
@@ -53,23 +51,23 @@
     </form>
 
     <form
+        v-if="resetShowed"
+        id="form2"
         style="width: 300px"
         class="mx-auto text-center mt-5"
-        id="form2"
-        novalidate
-        v-if="resetShowed">
+        novalidate>
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-envelope" flip
+                ><FontAwesomeIcon icon="fa-solid fa-envelope" flip
             /></span>
             <div class="form-floating">
                 <input
+                    id="resetemail"
+                    v-model.trim="emailToBeSent"
                     type="email"
                     class="form-control"
-                    id="resetemail"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="emailToBeSent" />
+                    required />
                 <label>邮箱</label>
             </div>
         </div>

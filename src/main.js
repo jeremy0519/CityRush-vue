@@ -3,6 +3,8 @@ import './scss/styles.scss'
 import 'animate.css'
 // Import all of Bootstrap's JS
 //import * as bootstrap from 'bootstrap'
+// eslint-disable-next-line no-unused-vars
+import { Tooltip } from 'bootstrap'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -26,6 +28,6 @@ import { faQq } from '@fortawesome/free-brands-svg-icons'
 library.add(faUser, faLock, faArrowRight, faQq, faEnvelope, faHashtag, faMars, faVenus, faCopy)
 
 const app = createApp(App)
-app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(router)
 app.mount('#app')

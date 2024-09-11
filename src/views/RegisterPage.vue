@@ -1,5 +1,5 @@
 <template>
-    <form style="width: 300px" class="mx-auto text-center mt-3" id="form" novalidate>
+    <form id="form" style="width: 300px" class="mx-auto text-center mt-3" novalidate>
         <h4 class="mb-1">欢迎来到FDFZ城定社!!</h4>
         <h5 class="d-inline-block fw-normal">或</h5>
         <h5 class="d-inline-block fw-normal">
@@ -9,58 +9,56 @@
 
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-user" beat-fade
+                ><FontAwesomeIcon icon="fa-solid fa-user" beat-fade
             /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="username"
                     type="text"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="username" />
+                    required />
                 <label>挑个喜欢的昵称吧</label>
             </div>
         </div>
 
         <div class="input-group has-validation mt-1 mb-1">
-            <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-lock" bounce
-            /></span>
+            <span class="input-group-text"><FontAwesomeIcon icon="fa-solid fa-lock" bounce /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="password"
                     type="password"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="password" />
+                    required />
                 <label>选个安全的密码哦</label>
             </div>
         </div>
 
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
-                ><font-awesome-icon icon="fa-solid fa-envelope" beat
+                ><FontAwesomeIcon icon="fa-solid fa-envelope" beat
             /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="email"
                     type="text"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="email" />
+                    required />
                 <label>邮箱用于重置密码</label>
             </div>
         </div>
 
         <div class="input-group has-validation mt-1 mb-1">
-            <span class="input-group-text"><font-awesome-icon icon="fa-brands fa-qq" flip /></span>
+            <span class="input-group-text"><FontAwesomeIcon icon="fa-brands fa-qq" flip /></span>
             <div class="form-floating">
                 <input
+                    v-model.trim="qq"
                     type="text"
                     class="form-control"
                     placeholder="彩蛋彩蛋彩蛋"
-                    required
-                    v-model.trim="qq" />
+                    required />
                 <label>QQ，乐在沟通</label>
             </div>
         </div>
@@ -69,26 +67,26 @@
         <!--start性别-->
         <div class="form-check form-check-inline">
             <input
+                v-model="gender"
                 class="form-check-input"
                 type="radio"
                 name="RadioOptions"
                 value="male"
-                required
-                v-model="gender" />
+                required />
             <label class="form-check-label text-primary"
-                >男<font-awesome-icon icon="fa-solid fa-mars" class="ps-1"
+                >男<FontAwesomeIcon icon="fa-solid fa-mars" class="ps-1"
             /></label>
         </div>
         <div class="form-check form-check-inline">
             <input
+                v-model="gender"
                 class="form-check-input"
                 type="radio"
                 name="RadioOptions"
                 value="female"
-                v-model="gender"
                 required />
             <label class="form-check-label text-danger"
-                >女<font-awesome-icon icon="fa-solid fa-venus" class="ps-1"
+                >女<FontAwesomeIcon icon="fa-solid fa-venus" class="ps-1"
             /></label>
         </div>
         <!--end性别-->
@@ -96,25 +94,25 @@
         <!--start是否本校及学号-->
         <div class="form-check d-flex justify-content-center">
             <input
+                id="flexCheck"
+                v-model="isFDFZ"
                 class="form-check-input me-1"
                 type="checkbox"
-                value=""
-                id="flexCheck"
-                v-model="isFDFZ" />
+                value="" />
             <label class="form-check-label" for="flexCheck">是FDFZ在校学生吗?</label>
         </div>
         <div v-if="isFDFZ">
             <div class="input-group has-validation">
                 <span class="input-group-text"
-                    ><font-awesome-icon icon="fa-solid fa-hashtag" spin
+                    ><FontAwesomeIcon icon="fa-solid fa-hashtag" spin
                 /></span>
                 <div class="form-floating">
                     <input
+                        v-model.trim="stuNumber"
                         type="number"
                         class="form-control"
                         placeholder="彩蛋彩蛋彩蛋"
-                        :required="isFDFZ"
-                        v-model.trim="stuNumber" />
+                        :required="isFDFZ" />
                     <label>请填写8位学号</label>
                 </div>
             </div>
@@ -124,7 +122,7 @@
 
         <!--提交按钮-->
         <div class="d-flex align-items-center justify-content-center">
-            <font-awesome-icon
+            <FontAwesomeIcon
                 role="button"
                 icon="fa-solid fa-arrow-right"
                 class="text-info"
@@ -178,7 +176,6 @@ function handleSignUp() {
                         username: username.value,
                         email: email.value,
                         QQ: qq.value,
-                        totalEventEnrolledTimes: 0,
                         gender: gender.value,
                         isFDFZ: isFDFZ.value,
                         stuNumber: isFDFZ.value ? stuNumber.value : null

@@ -24,7 +24,7 @@ const routes = [
                 if (currentUser) {
                     return { name: 'Home' }
                 }
-            } catch (e) {
+            } catch {
                 return true
             }
         }
@@ -41,7 +41,7 @@ const routes = [
                 if (currentUser) {
                     return { name: 'Home' }
                 }
-            } catch (e) {
+            } catch {
                 return true
             }
         }
@@ -57,7 +57,7 @@ const routes = [
                 if (!currentUser) {
                     return { name: 'Login' }
                 }
-            } catch (e) {
+            } catch {
                 return { name: 'Login' }
             }
         },

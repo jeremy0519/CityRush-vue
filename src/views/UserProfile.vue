@@ -1,8 +1,8 @@
 <template>
     <!--编辑信息的modal-->
     <div
-        class="modal fade"
         id="modal"
+        class="modal fade"
         tabindex="-1"
         data-bs-backdrop="static"
         data-bs-keyboard="false">
@@ -18,46 +18,46 @@
                     <form>
                         <div class="mb-3">
                             <label class="form-label">昵称</label>
-                            <input type="text" class="form-control" v-model.trim="newUsername" />
+                            <input v-model.trim="newUsername" type="text" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">邮箱</label>
-                            <input type="email" class="form-control" v-model.trim="newEmail" />
+                            <input v-model.trim="newEmail" type="email" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">密码</label>
                             <input
+                                v-model.trim="newPassword"
                                 type="password"
-                                class="form-control"
-                                v-model.trim="newPassword" />
+                                class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">QQ</label>
-                            <input type="text" class="form-control" v-model.trim="newQQ" />
+                            <input v-model.trim="newQQ" type="text" class="form-control" />
                         </div>
                         <div class="form-check form-check-inline">
                             <input
+                                v-model="newGender"
                                 class="form-check-input"
                                 type="radio"
-                                name="RadioOptions"
-                                v-model="newGender" />
+                                name="RadioOptions" />
                             <label class="form-check-label"> 男 </label>
                         </div>
                         <div class="form-check form-check-inline mb-3">
                             <input
+                                v-model="newGender"
                                 class="form-check-input"
                                 type="radio"
-                                name="RadioOptions"
-                                v-model="newGender" />
+                                name="RadioOptions" />
                             <label class="form-check-label"> 女 </label>
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" v-model="newIsFDFZ" />
+                            <input v-model="newIsFDFZ" type="checkbox" class="form-check-input" />
                             <label class="form-check-label">是否为FDFZ在校学生?</label>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">(如果是)8位学号</label>
-                            <input type="number" class="form-control" v-model="newStuNumber" />
+                            <input v-model="newStuNumber" type="number" class="form-control" />
                         </div>
                     </form>
                 </div>
@@ -108,9 +108,9 @@
                     data-bs-title="3010116916"
                     data-bs-placement="left" />
                 <a class="ps-2" style="cursor: pointer">
-                    <font-awesome-icon
-                        icon="fa-solid fa-copy"
+                    <FontAwesomeIcon
                         id="copyButton"
+                        icon="fa-solid fa-copy"
                         class="text-secondary"
                         data-clipboard-text="Just because you can doesn't mean you should — clipboard.js"
                         data-bs-title="已复制"

@@ -1,9 +1,9 @@
 <template>
     <form id="form" novalidate>
         <p class="form-label mt-3">请输入新密码:</p>
-        <input type="password" class="form-control" required v-model="newPassword" />
+        <input v-model="newPassword" type="password" class="form-control" required />
         <div class="mt-1 d-flex align-items-center justify-content-center">
-            <font-awesome-icon
+            <FontAwesomeIcon
                 role="button"
                 icon="fa-solid fa-arrow-right"
                 class="text-info"
