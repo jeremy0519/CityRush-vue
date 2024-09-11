@@ -34,9 +34,8 @@ function handleReset() {
         isLoading.value = true
         account
             .updateRecovery(route.query.userId, route.query.secret, newPassword.value)
-            .then((response) => {
+            .then(() => {
                 Toast.fire({ icon: 'success', text: '成功重置密码' })
-                console.log(response)
                 router.push({ name: 'Login' })
             })
             .catch((error) => {

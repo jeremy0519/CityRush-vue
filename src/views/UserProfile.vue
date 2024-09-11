@@ -153,6 +153,8 @@ import { Tooltip } from 'bootstrap'
 import ClipboardJS from 'clipboard'
 import { delay } from '@/helper'
 import { account } from '@/helper'
+import Swal from 'sweetalert2'
+import { Toast } from '@/helper'
 
 async function displayCopySuccess() {
     const tooltip = Tooltip.getInstance('#copyButton')
@@ -184,12 +186,22 @@ onMounted(() => {
 })
 
 //----------------上传更改到服务器-----------------
-const processStatus = ref(0) //0：（默认）不显示 1：请求中 2：成功 3：失败
+const isLoading = ref(false)
 function updateProfile() {}
 function logout() {
-    account.deleteSession('current').then((response) => {
-        console.log(response)
-        router.push({ name: 'Home' })
+    Swal.fire({
+        title: 'Are you sure?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '确认退出登录',
+        cancelButtonText: '取消'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            account.deleteSession('current').then(() => {
+                Toast.fire({ icon: 'success', text: '成功退出登录' })
+                router.push({ name: 'Home' })
+            })
+        }
     })
 }
 </script>

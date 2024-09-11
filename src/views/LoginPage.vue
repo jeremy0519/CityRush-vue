@@ -101,9 +101,8 @@ function handleLogin() {
         // 请求登录
         account
             .createEmailPasswordSession(emailToLogin.value, passwordToLogin.value)
-            .then((response) => {
+            .then(() => {
                 isLoading.value = false
-                console.log(response)
                 Toast.fire({ icon: 'success', title: '成功登录' })
                 router.push({ name: 'Home' })
             })
@@ -126,13 +125,11 @@ function sendEmail() {
         // 请求发送重置密码邮件
         account
             .createRecovery(emailToBeSent.value, reset_password_url)
-            .then((response) => {
-                console.log(response)
+            .then(() => {
                 Toast.fire({ icon: 'success', title: '成功发送密码重置邮件' })
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
-                console.log(error)
                 Swal.fire({
                     icon: 'error',
                     title: '发送密码重置邮件失败...',

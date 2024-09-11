@@ -161,12 +161,10 @@ function handleSignUp() {
         const tempID = ID.unique()
         account
             .create(tempID, email.value, password.value)
-            .then((response) => {
-                console.log(response)
+            .then(() => {
                 return account.createEmailPasswordSession(email.value, password.value)
             })
-            .then((response) => {
-                console.log(response)
+            .then(() => {
                 return databases.createDocument(
                     database_id,
                     users_collection_id,
@@ -183,8 +181,7 @@ function handleSignUp() {
                     [Permission.write(Role.user(tempID))]
                 )
             })
-            .then((response) => {
-                console.log(response)
+            .then(() => {
                 Toast.fire({ icon: 'success', title: '成功注册' })
                 router.push({ name: 'Home' })
             })

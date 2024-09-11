@@ -3,8 +3,6 @@ import './scss/styles.scss'
 import 'animate.css'
 // Import all of Bootstrap's JS
 //import * as bootstrap from 'bootstrap'
-// eslint-disable-next-line no-unused-vars
-import { Tooltip } from 'bootstrap'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
