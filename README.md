@@ -10,19 +10,17 @@
 - [ ] 可视化编辑Task&Route Info
 - [ ] NPC在各点位查看各组选手状态，并确认选手是否到达点位/完成任务/加减时（然后给Player发送Task/Route Info）
 - [ ] 活动结束后展示排行榜
-- [ ] 主页和活动详情页面自由评论
 
 在提交贡献前，请务必确保您了解FDFZ城定规则。[直达Project面板](https://github.com/users/jeremy0519/projects/1)
 # 开发指南
-本项目前端采用[Vue3](https://cn.vuejs.org/guide/introduction.html)(含[Vue-router](https://router.vuejs.org/zh/introduction.html))+[Bootstrap5](https://getbootstrap.com/docs/5.3/getting-started/introduction/)+[FontAwesome](https://fontawesome.com/search)+[parse-server-js-sdk](https://docs.parseplatform.org/js/guide/)
+本项目前端采用[Vue3](https://cn.vuejs.org/guide/introduction.html)(含[Vue-router](https://router.vuejs.org/zh/introduction.html))+[Bootstrap5](https://getbootstrap.com/docs/5.3/getting-started/introduction/)+[FontAwesome](https://fontawesome.com/search)+[appwrite-js-sdk](https://appwrite.io/docs)
 
-后端采用parse-server(服务器地址：https://parse.hijeremy.cn/parse appId：cityrun 管理面板：https://parse.hijeremy.cn/dashboard)
 ## 安装依赖
-先安装[nodejs v20](https://nodejs.org/zh-cn/download/package-manager)
+先安装[nodejs v22](https://nodejs.org/zh-cn/download/package-manager)
 
-再安装yarn包管理器
-`corepack enable yarn`
+再安装pnpm包管理器
+`npm install -g pnpm`
 
-`yarn install`
+`pnpm install`
 ## 本地运行
-`yarn run dev`
+`pnpm dev`
