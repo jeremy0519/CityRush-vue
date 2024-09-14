@@ -1,21 +1,8 @@
-import Swal from 'sweetalert2'
 export function delay(millis) {
     return new Promise((resolve) => {
         setTimeout(resolve, millis)
     })
 }
-export const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 4000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer
-        toast.onmouseleave = Swal.resumeTimer
-    }
-})
-
 import { Client, Account, Databases } from 'appwrite'
 
 const project_id = '66daf470002a69b6c75a'

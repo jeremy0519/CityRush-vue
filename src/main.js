@@ -1,10 +1,10 @@
-// Import our custom CSS
 import './scss/styles.scss'
 import 'animate.css'
-// Import all of Bootstrap's JS
 //import * as bootstrap from 'bootstrap'
 import { createApp } from 'vue'
 import App from './App.vue'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 import router from './router'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -40,4 +40,5 @@ library.add(
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(router)
+app.use(Toast)
 app.mount('#app')

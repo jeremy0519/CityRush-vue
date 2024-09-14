@@ -1,5 +1,10 @@
 <template>
-    <form id="form1" style="width: 300px" class="mx-auto text-center mt-3" novalidate>
+    <form
+        id="form1"
+        style="width: 300px"
+        class="mx-auto text-center mt-3"
+        novalidate
+        @submit.prevent>
         <h4 class="d-inline-block">请登录或</h4>
         <h4 class="d-inline-block">
             <RouterLink to="/register" class="text-primary nav-link">注册</RouterLink>
@@ -55,7 +60,8 @@
         id="form2"
         style="width: 300px"
         class="mx-auto text-center mt-5"
-        novalidate>
+        novalidate
+        @submit.prevent>
         <div class="input-group has-validation mt-1 mb-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-solid fa-envelope" flip
@@ -78,12 +84,13 @@
     </form>
 </template>
 <script setup>
-import Swal from 'sweetalert2'
 import { ref } from 'vue'
-import { Toast, reset_password_url } from '@/helper'
+import { useToast } from 'vue-toastification'
+import { reset_password_url } from '@/helper'
 import { useRouter } from 'vue-router'
 import { account } from '@/helper'
 const router = useRouter()
+const toast = useToast()
 
 const resetShowed = ref(false)
 const emailToBeSent = ref('')
@@ -103,16 +110,12 @@ function handleLogin() {
             .createEmailPasswordSession(emailToLogin.value, passwordToLogin.value)
             .then(() => {
                 isLoading.value = false
-                Toast.fire({ icon: 'success', title: '成功登录' })
+                toast.success('成功登录')
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
                 isLoading.value = false
-                Swal.fire({
-                    icon: 'error',
-                    title: '登录失败...',
-                    text: error.message
-                })
+                toast.error(error.message, { timeout: false })
             })
     }
 }
@@ -126,15 +129,11 @@ function sendEmail() {
         account
             .createRecovery(emailToBeSent.value, reset_password_url)
             .then(() => {
-                Toast.fire({ icon: 'success', title: '成功发送密码重置邮件' })
+                toast.success('成功发送密码重置邮件')
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: '发送密码重置邮件失败...',
-                    text: error.message
-                })
+                toast.error(error.message, { timeout: false })
             })
     }
 }

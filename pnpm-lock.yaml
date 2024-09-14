@@ -26,9 +26,6 @@ importers:
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
-      '@sweetalert2/theme-bulma':
-        specifier: ^5.0.18
-        version: 5.0.18
       animate.css:
         specifier: ^4.1.1
         version: 4.1.1
@@ -41,15 +38,15 @@ importers:
       clipboard:
         specifier: ^2.0.11
         version: 2.0.11
-      sweetalert2:
-        specifier: ^11.14.0
-        version: 11.14.0
       vue:
         specifier: ^3.5.4
         version: 3.5.4
       vue-router:
         specifier: ^4.4.4
         version: 4.4.4(vue@3.5.4)
+      vue-toastification:
+        specifier: 2.0.0-rc.5
+        version: 2.0.0-rc.5(vue@3.5.4)
     devDependencies:
       '@rushstack/eslint-patch':
         specifier: ^1.10.4
@@ -577,9 +574,6 @@ packages:
 
   '@rushstack/eslint-patch@1.10.4':
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
-
-  '@sweetalert2/theme-bulma@5.0.18':
-    resolution: {integrity: sha512-GmlNOFmgF9bw9XMAEz6kLWglvSLuNMtr/ThTYW6mEKkQw9M8s1WB/1H7s/nIn2IgamgOlz/fhDvDqX9ne5cgQg==}
 
   '@types/bootstrap@5.2.10':
     resolution: {integrity: sha512-F2X+cd6551tep0MvVZ6nM8v7XgGN/twpdNDjqS1TUM7YFNEtQYWk+dKAnH+T1gr6QgCoGMPl487xw/9hXooa2g==}
@@ -1350,9 +1344,6 @@ packages:
   svg-tags@1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
 
-  sweetalert2@11.14.0:
-    resolution: {integrity: sha512-kF1Q/+GtZZXr+rYVcBNwlEsnxP089CpDbck+MYjvLaQj9x4fzHqN9UhlkHOIR0k09LVu2sx8cU9BnvRlxWIZqg==}
-
   synckit@0.9.1:
     resolution: {integrity: sha512-7gr8p9TQP6RAHusBOSLs46F4564ZrjV8xFmw5zCmgmhGUcw2hxsShhJ6CEiHQMgPDwAQ1fWHPM0ypc4RMAig4A==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1469,6 +1460,11 @@ packages:
     resolution: {integrity: sha512-3MlnDqwRwZwCQVbtVfpsU+nrNymNjnXSsQtXName5925NVC1+326VVfYH9vSrA0N13teGEo8z5x7gbRnGjCDiQ==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue-toastification@2.0.0-rc.5:
+    resolution: {integrity: sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==}
+    peerDependencies:
+      vue: ^3.0.2
 
   vue@3.5.4:
     resolution: {integrity: sha512-3yAj2gkmiY+i7+22A1PWM+kjOVXjU74UPINcTiN7grIVPyFFI0lpGwHlV/4xydDmobaBn7/xmi+YG8HeSlCTcg==}
@@ -1935,8 +1931,6 @@ snapshots:
     optional: true
 
   '@rushstack/eslint-patch@1.10.4': {}
-
-  '@sweetalert2/theme-bulma@5.0.18': {}
 
   '@types/bootstrap@5.2.10':
     dependencies:
@@ -2728,8 +2722,6 @@ snapshots:
 
   svg-tags@1.0.0: {}
 
-  sweetalert2@11.14.0: {}
-
   synckit@0.9.1:
     dependencies:
       '@pkgr/core': 0.1.1
@@ -2845,6 +2837,10 @@ snapshots:
   vue-router@4.4.4(vue@3.5.4):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.4
+
+  vue-toastification@2.0.0-rc.5(vue@3.5.4):
+    dependencies:
       vue: 3.5.4
 
   vue@3.5.4:

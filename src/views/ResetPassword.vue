@@ -1,5 +1,5 @@
 <template>
-    <form id="form" novalidate>
+    <form id="form" novalidate @submit.prevent>
         <p class="form-label mt-3">请输入新密码:</p>
         <input v-model="newPassword" type="password" class="form-control" required />
         <div class="mt-1 d-flex align-items-center justify-content-center">
@@ -17,10 +17,10 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { account } from '@/helper'
-import { Toast } from '@/helper'
-import Swal from 'sweetalert2'
+import { useToast } from 'vue-toastification'
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 
 const newPassword = ref('')
 
@@ -35,16 +35,12 @@ function handleReset() {
         account
             .updateRecovery(route.query.userId, route.query.secret, newPassword.value)
             .then(() => {
-                Toast.fire({ icon: 'success', text: '成功重置密码' })
+                toast.success('成功重置密码')
                 router.push({ name: 'Login' })
             })
             .catch((error) => {
                 isLoading.value = false
-                Swal.fire({
-                    icon: 'error',
-                    title: '重置密码失败...',
-                    text: error.message
-                })
+                toast.error(error.message, { timeout: false })
             })
     }
 }

@@ -1,5 +1,10 @@
 <template>
-    <form id="form" style="width: 300px" class="mx-auto text-center mt-3" novalidate>
+    <form
+        id="form"
+        style="width: 300px"
+        class="mx-auto text-center mt-3"
+        novalidate
+        @submit.prevent>
         <h4 class="mb-1">欢迎来到FDFZ城定社!!</h4>
         <h5 class="d-inline-block fw-normal">或</h5>
         <h5 class="d-inline-block fw-normal">
@@ -136,10 +141,10 @@
 import { ref } from 'vue'
 import { ID, Permission, Role } from 'appwrite'
 import { useRouter } from 'vue-router'
-import Swal from 'sweetalert2'
-import { Toast } from '@/helper'
+import { useToast } from 'vue-toastification'
 import { account, databases, database_id, users_collection_id } from '@/helper'
 const router = useRouter()
+const toast = useToast()
 
 const username = ref('')
 const password = ref('')
@@ -182,16 +187,12 @@ function handleSignUp() {
                 )
             })
             .then(() => {
-                Toast.fire({ icon: 'success', title: '成功注册' })
+                toast.success('成功注册')
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
                 isLoading.value = false
-                Swal.fire({
-                    icon: 'error',
-                    title: '注册失败...',
-                    text: error.message
-                })
+                toast.error(error.message, { timeout: false })
             })
     }
 }

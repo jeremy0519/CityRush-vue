@@ -15,7 +15,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body bg-success-subtle">
-                    <form>
+                    <form @submit.prevent>
                         <div class="mb-3">
                             <label class="form-label">昵称</label>
                             <input v-model.trim="newUsername" type="text" class="form-control" />
@@ -146,15 +146,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 import { Tooltip } from 'bootstrap'
 import ClipboardJS from 'clipboard'
 import { delay } from '@/helper'
 import { account } from '@/helper'
-import Swal from 'sweetalert2'
-import { Toast } from '@/helper'
 
 async function displayCopySuccess() {
     const tooltip = Tooltip.getInstance('#copyButton')
@@ -186,22 +186,12 @@ onMounted(() => {
 })
 
 //----------------上传更改到服务器-----------------
-const isLoading = ref(false)
+//const isLoading = ref(false)
 function updateProfile() {}
 function logout() {
-    Swal.fire({
-        title: 'Are you sure?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '确认退出登录',
-        cancelButtonText: '取消'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            account.deleteSession('current').then(() => {
-                Toast.fire({ icon: 'success', text: '成功退出登录' })
-                router.push({ name: 'Home' })
-            })
-        }
+    account.deleteSession('current').then(() => {
+        toast.success('成功退出登录')
+        router.push({ name: 'Home' })
     })
 }
 </script>
