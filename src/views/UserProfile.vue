@@ -32,7 +32,7 @@
                                 class="form-control" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">旧密码</label>
+                            <label class="form-label">旧密码（更改邮箱或密码要填）</label>
                             <input
                                 v-model.trim="oldPassword"
                                 type="password"
@@ -41,6 +41,10 @@
                         <div class="mb-3">
                             <label class="form-label">QQ</label>
                             <input v-model.trim="newQQ" type="text" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">微信</label>
+                            <input v-model.trim="newWechat" type="text" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">个人简介</label>
@@ -138,7 +142,6 @@ import { useToast } from 'vue-toastification'
 const toast = useToast()
 import { Tooltip } from 'bootstrap'
 import { account, databases, database_id, users_collection_id } from '@/helper'
-import { Query } from 'appwrite'
 
 const username = ref('')
 const qq = ref('')
@@ -166,22 +169,19 @@ account
     .get()
     .then((response) => {
         registerTime.value = new Date(response.$createdAt).toLocaleDateString()
-        return databases.listDocuments(database_id, users_collection_id, [
-            Query.equal('user_id', response.$id)
-        ])
+        return databases.getDocument(database_id, users_collection_id, response.$id)
     })
     .then((response) => {
         retrieveDataComplete.value = true
-        username.value = response.documents[0].username
-        qq.value = response.documents[0].QQ
-        wechat.value = response.documents[0].wechat
-        bestRank.value = response.documents[0].bestRank
-        totalEventEnrolledTimes.value = response.documents[0].totalEventEnrolledTimes
-        intro.value = response.documents[0].intro
-        stuNumber.value = response.documents[0].stuNumber
-        genderIcon.value =
-            response.documents[0].gender == 'male' ? 'fa-solid fa-mars' : 'fa-solid fa-venus'
-        genderClass.value = response.documents[0].gender == 'male' ? 'text-primary' : 'text-danger'
+        username.value = response.username
+        qq.value = response.QQ
+        wechat.value = response.wechat
+        bestRank.value = response.bestRank
+        totalEventEnrolledTimes.value = response.totalEventEnrolledTimes
+        intro.value = response.intro
+        stuNumber.value = response.stuNumber
+        genderIcon.value = response.gender == 'male' ? 'fa-solid fa-mars' : 'fa-solid fa-venus'
+        genderClass.value = response.gender == 'male' ? 'text-primary' : 'text-danger'
     })
     .catch((error) => {
         toast.error(error.message)
@@ -257,22 +257,12 @@ function simplyUpdateProfile() {
     account
         .get()
         .then((response) => {
-            return databases.listDocuments(database_id, users_collection_id, [
-                Query.equal('user_id', response.$id)
-            ])
-        })
-        .then((response) => {
-            return databases.updateDocument(
-                database_id,
-                users_collection_id,
-                response.documents[0].$id,
-                {
-                    username: newUsername.value ? newUsername.value : undefined,
-                    QQ: newQQ.value ? newQQ.value : undefined,
-                    wechat: newWechat.value ? newWechat.value : undefined,
-                    intro: newIntro.value ? newIntro.value : undefined
-                }
-            )
+            return databases.updateDocument(database_id, users_collection_id, response.$id, {
+                username: newUsername.value ? newUsername.value : undefined,
+                QQ: newQQ.value ? newQQ.value : undefined,
+                wechat: newWechat.value ? newWechat.value : undefined,
+                intro: newIntro.value ? newIntro.value : undefined
+            })
         })
         .then(() => {
             toast.success('更新个人信息成功')

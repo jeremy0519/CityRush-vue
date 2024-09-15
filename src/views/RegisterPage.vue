@@ -158,7 +158,7 @@ const toast = useToast()
 const username = ref('')
 const password = ref('')
 const qq = ref('')
-const weixin = ref('')
+const wechat = ref('')
 const email = ref('')
 const gender = ref('')
 const isFDFZ = ref(false)
@@ -183,12 +183,11 @@ function handleSignUp() {
                 return databases.createDocument(
                     database_id,
                     users_collection_id,
-                    ID.unique(),
+                    tempID,
                     {
-                        user_id: tempID,
                         username: username.value,
                         QQ: qq.value,
-                        weixin: weixin.value,
+                        wechat: wechat.value,
                         gender: gender.value,
                         isFDFZ: isFDFZ.value,
                         stuNumber: isFDFZ.value ? stuNumber.value : null
