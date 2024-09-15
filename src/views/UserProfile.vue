@@ -35,29 +35,12 @@
                             <label class="form-label">QQ</label>
                             <input v-model.trim="newQQ" type="text" class="form-control" />
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input
-                                v-model="newGender"
-                                class="form-check-input"
-                                type="radio"
-                                name="RadioOptions" />
-                            <label class="form-check-label"> 男 </label>
-                        </div>
-                        <div class="form-check form-check-inline mb-3">
-                            <input
-                                v-model="newGender"
-                                class="form-check-input"
-                                type="radio"
-                                name="RadioOptions" />
-                            <label class="form-check-label"> 女 </label>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input v-model="newIsFDFZ" type="checkbox" class="form-check-input" />
-                            <label class="form-check-label">是否为FDFZ在校学生?</label>
-                        </div>
                         <div class="mb-3">
-                            <label class="form-label">(如果是)8位学号</label>
-                            <input v-model="newStuNumber" type="number" class="form-control" />
+                            <label class="form-label">个人简介</label>
+                            <textarea
+                                v-model.trim="newIntro"
+                                type="text"
+                                class="form-control"></textarea>
                         </div>
                     </form>
                 </div>
@@ -78,49 +61,40 @@
     <div class="mx-auto border border-0" style="width: 350px">
         <div class="image d-flex flex-column justify-content-center align-items-center">
             <!--昵称-->
-            <span class="name mt-5 fw-bold fs-1">Eleanor Pena</span>
+            <span class="name mt-5 fw-bold fs-1">{{ username }}</span>
 
             <!--最佳名次-->
             <span
-                class="fs-3 fw-semibold gradient-text mt-3 animate__animated animate__repeat-3 animate__heartBeat"
-                >10 <span class="fs-6 fw-lighter text-secondary">最佳名次</span></span
+                class="fs-3 fw-semibold mt-3 text-danger animate__animated animate__repeat-3 animate__heartBeat"
+                >{{ bestRank }} <span class="fs-6 fw-lighter text-secondary">最佳名次</span></span
             >
 
             <!--参加次数-->
             <span class="fs-3 fw-semibold"
-                ><span class="fs-6 fw-lighter text-secondary">参与次数</span> 2</span
+                ><span class="fs-6 fw-lighter text-secondary">参与次数</span>
+                {{ totalEventEnrolledTimes }}</span
             >
 
             <!--个人简介-->
-            <div class="mt-2">
-                <span class="text-break fs-6 text-secondary"
-                    >aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                </span>
+            <div class="mt-2 mb-3">
+                <span class="text-break fs-6">{{ intro }} </span>
             </div>
 
             <!--QQ链接-->
             <div class="d-flex align-items-end mt-1">
-                <img
-                    src="/qq.webp"
-                    width="24"
-                    height="28"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="3010116916"
-                    data-bs-placement="left" />
-                <a class="ps-2" style="cursor: pointer">
-                    <FontAwesomeIcon
-                        id="copyButton"
-                        icon="fa-solid fa-copy"
-                        class="text-secondary"
-                        data-clipboard-text="Just because you can doesn't mean you should — clipboard.js"
-                        data-bs-title="已复制"
-                        data-bs-placement="right" />
-                </a>
+                <div class="pe-2">{{ stuNumber }}</div>
+                <div class="pe-4">
+                    <FontAwesomeIcon :icon="genderIcon" :class="genderClass" size="xl" />
+                </div>
+                <img id="showQQ" src="/qq.webp" width="24" height="28" />
+                <div class="ps-2" style="cursor: pointer" @click="copyQQ">
+                    <FontAwesomeIcon icon="fa-solid fa-copy" class="text-secondary" />
+                </div>
             </div>
 
             <!--加入时间-->
             <span class="badge text-bg-secondary mt-2" style="cursor: default"
-                >加入于 May,2021</span
+                >加入于 {{ registerTime }}</span
             >
 
             <!--编辑按钮-->
@@ -146,47 +120,87 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useToast } from 'vue-toastification'
 const toast = useToast()
 import { Tooltip } from 'bootstrap'
-import ClipboardJS from 'clipboard'
-import { delay } from '@/helper'
-import { account } from '@/helper'
+import { account, databases, database_id, users_collection_id } from '@/helper'
+import { Query } from 'appwrite'
 
-async function displayCopySuccess() {
-    const tooltip = Tooltip.getInstance('#copyButton')
-    tooltip.show()
-    await delay(2000)
-    tooltip.hide()
+const username = ref('')
+const qq = ref('qq')
+const genderIcon = ref('fa-solid fa-mars')
+const genderClass = ref('text-primary')
+const bestRank = ref()
+const totalEventEnrolledTimes = ref()
+const intro = ref()
+const stuNumber = ref()
+const registerTime = ref()
+const retrieveDataComplete = ref(false)
+
+const newEmail = ref('')
+const newIntro = ref('')
+const newPassword = ref('')
+const newQQ = ref('')
+const newUsername = ref('')
+
+//---------------获取展示用户信息-------------------
+//获取当前用户id
+account
+    .get()
+    .then((response) => {
+        registerTime.value = new Date(response.$createdAt).toLocaleDateString()
+        return databases.listDocuments(database_id, users_collection_id, [
+            Query.equal('user_id', response.$id)
+        ])
+    })
+    .then((response) => {
+        retrieveDataComplete.value = true
+        username.value = response.documents[0].username
+        qq.value = response.documents[0].QQ
+        bestRank.value = response.documents[0].bestRank
+        totalEventEnrolledTimes.value = response.documents[0].totalEventEnrolledTimes
+        intro.value = response.documents[0].intro
+        stuNumber.value = response.documents[0].stuNumber
+        genderIcon.value =
+            response.documents[0].gender == 'male' ? 'fa-solid fa-mars' : 'fa-solid fa-venus'
+        genderClass.value = response.documents[0].gender == 'male' ? 'text-primary' : 'text-danger'
+    })
+    .catch((error) => {
+        toast.error(error.message)
+    })
+
+//--------复制qq号函数-------------
+function copyQQ() {
+    navigator.clipboard
+        .writeText(qq.value)
+        .then(() => {
+            toast.success('成功复制QQ号')
+        })
+        .catch(() => {
+            toast.error('复制QQ号失败')
+        })
 }
 
 onMounted(() => {
-    //激活各组件
     //激活QQ号显示和复制的tooltip
-    new Tooltip(document.querySelectorAll('[data-bs-toggle="tooltip"]')[0])
-    new Tooltip(document.getElementById('copyButton'), {
-        placement: 'right',
-        title: '已复制',
-        trigger: 'manual'
-    })
-    //激活复制的功能
-    var clipboard = new ClipboardJS('#copyButton', {
-        text: function (trigger) {
-            return trigger.getAttribute('data-clipboard-text')
-        }
-    })
-    clipboard.on('success', async function (e) {
-        displayCopySuccess().then(() => {
-            e.clearSelection()
-        })
-    })
+    watch(
+        retrieveDataComplete,
+        (result) => {
+            if (result) {
+                new Tooltip(document.getElementById('showQQ'), {
+                    placement: 'top',
+                    title: qq.value
+                })
+            }
+        },
+        { once: true }
+    )
 })
 
 //----------------上传更改到服务器-----------------
-//const isLoading = ref(false)
 function updateProfile() {}
 function logout() {
     account.deleteSession('current').then(() => {
@@ -195,14 +209,3 @@ function logout() {
     })
 }
 </script>
-
-<style scoped>
-.gradient-text {
-    background: rgb(63, 94, 251);
-    background: radial-gradient(circle, #ff1744 0%, #8e24aa 50%, #2979ff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-</style>
