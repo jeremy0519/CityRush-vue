@@ -25,9 +25,16 @@
                             <input v-model.trim="newEmail" type="email" class="form-control" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">密码</label>
+                            <label class="form-label">新密码</label>
                             <input
                                 v-model.trim="newPassword"
+                                type="password"
+                                class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">旧密码</label>
+                            <input
+                                v-model.trim="oldPassword"
                                 type="password"
                                 class="form-control" />
                         </div>
@@ -82,12 +89,16 @@
 
             <!--QQ链接-->
             <div class="d-flex align-items-end mt-1">
-                <div class="pe-2">{{ stuNumber }}</div>
-                <div class="pe-4">
+                <div class="me-2">{{ stuNumber }}</div>
+                <div class="me-4">
                     <FontAwesomeIcon :icon="genderIcon" :class="genderClass" size="xl" />
                 </div>
                 <img id="showQQ" src="/qq.webp" width="24" height="28" />
-                <div class="ps-2" style="cursor: pointer" @click="copyQQ">
+                <div class="ms-2" style="cursor: pointer" @click="copyQQ">
+                    <FontAwesomeIcon icon="fa-solid fa-copy" class="text-secondary" />
+                </div>
+                <img id="showWechat" class="ms-2" src="/wechat.webp" width="28" height="28" />
+                <div class="ms-2" style="cursor: pointer" @click="copyWechat">
                     <FontAwesomeIcon icon="fa-solid fa-copy" class="text-secondary" />
                 </div>
             </div>
@@ -130,9 +141,10 @@ import { account, databases, database_id, users_collection_id } from '@/helper'
 import { Query } from 'appwrite'
 
 const username = ref('')
-const qq = ref('qq')
-const genderIcon = ref('fa-solid fa-mars')
-const genderClass = ref('text-primary')
+const qq = ref('')
+const wechat = ref('')
+const genderIcon = ref('')
+const genderClass = ref('')
 const bestRank = ref()
 const totalEventEnrolledTimes = ref()
 const intro = ref()
@@ -142,8 +154,10 @@ const retrieveDataComplete = ref(false)
 
 const newEmail = ref('')
 const newIntro = ref('')
+const oldPassword = ref('')
 const newPassword = ref('')
 const newQQ = ref('')
+const newWechat = ref('')
 const newUsername = ref('')
 
 //---------------获取展示用户信息-------------------
@@ -160,6 +174,7 @@ account
         retrieveDataComplete.value = true
         username.value = response.documents[0].username
         qq.value = response.documents[0].QQ
+        wechat.value = response.documents[0].wechat
         bestRank.value = response.documents[0].bestRank
         totalEventEnrolledTimes.value = response.documents[0].totalEventEnrolledTimes
         intro.value = response.documents[0].intro
@@ -172,7 +187,7 @@ account
         toast.error(error.message)
     })
 
-//--------复制qq号函数-------------
+//--------复制函数-------------
 function copyQQ() {
     navigator.clipboard
         .writeText(qq.value)
@@ -183,7 +198,16 @@ function copyQQ() {
             toast.error('复制QQ号失败')
         })
 }
-
+function copyWechat() {
+    navigator.clipboard
+        .writeText(wechat.value)
+        .then(() => {
+            toast.success('成功复制微信号')
+        })
+        .catch(() => {
+            toast.error('复制微信号失败')
+        })
+}
 onMounted(() => {
     //激活QQ号显示和复制的tooltip
     watch(
@@ -194,6 +218,10 @@ onMounted(() => {
                     placement: 'top',
                     title: qq.value
                 })
+                new Tooltip(document.getElementById('showWechat'), {
+                    placement: 'top',
+                    title: wechat.value
+                })
             }
         },
         { once: true }
@@ -201,7 +229,92 @@ onMounted(() => {
 })
 
 //----------------上传更改到服务器-----------------
-function updateProfile() {}
+function updateProfile() {
+    if (newUsername.value || newIntro.value || newQQ.value || newWechat.value) {
+        simplyUpdateProfile()
+    }
+    if (newEmail.value && !newPassword.value) {
+        updateEmail()
+    }
+    if (newPassword.value && !newEmail.value) {
+        updatePassword()
+    }
+    if (newPassword.value && newEmail.value) {
+        updatePasswordAndEmail()
+    }
+    if (
+        !newEmail.value &&
+        !newIntro.value &&
+        !newUsername.value &&
+        !newPassword.value &&
+        !newQQ.value &&
+        !newWechat.value
+    ) {
+        toast.warning('没有需要更新的')
+    }
+}
+function simplyUpdateProfile() {
+    account
+        .get()
+        .then((response) => {
+            return databases.listDocuments(database_id, users_collection_id, [
+                Query.equal('user_id', response.$id)
+            ])
+        })
+        .then((response) => {
+            return databases.updateDocument(
+                database_id,
+                users_collection_id,
+                response.documents[0].$id,
+                {
+                    username: newUsername.value ? newUsername.value : undefined,
+                    QQ: newQQ.value ? newQQ.value : undefined,
+                    wechat: newWechat.value ? newWechat.value : undefined,
+                    intro: newIntro.value ? newIntro.value : undefined
+                }
+            )
+        })
+        .then(() => {
+            toast.success('更新个人信息成功')
+        })
+        .catch((error) => {
+            toast.error(error.message)
+        })
+}
+function updateEmail() {
+    account
+        .updateEmail(newEmail.value, oldPassword.value)
+        .then(() => {
+            toast.success('更新邮箱成功')
+        })
+        .catch((error) => {
+            toast.error(error.message)
+        })
+}
+function updatePassword() {
+    account
+        .updatePassword(newPassword.value, oldPassword.value)
+        .then(() => {
+            toast.success('更新密码成功')
+        })
+        .catch((error) => {
+            toast.error(error.message)
+        })
+}
+function updatePasswordAndEmail() {
+    account
+        .updateEmail(newEmail.value, oldPassword.value)
+        .then(() => {
+            toast.success('更新邮箱成功')
+            return account.updatePassword(newPassword.value, oldPassword.value)
+        })
+        .then(() => {
+            toast.success('更新密码成功')
+        })
+        .catch((error) => {
+            toast.error(error.message)
+        })
+}
 function logout() {
     account.deleteSession('current').then(() => {
         toast.success('成功退出登录')

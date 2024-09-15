@@ -22,7 +22,7 @@ import {
     faCopy,
     faBars
 } from '@fortawesome/free-solid-svg-icons'
-import { faQq } from '@fortawesome/free-brands-svg-icons'
+import { faQq, faWeixin } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
 library.add(
     faUser,
@@ -34,7 +34,8 @@ library.add(
     faMars,
     faVenus,
     faCopy,
-    faBars
+    faBars,
+    faWeixin
 )
 
 const app = createApp(App)

@@ -67,9 +67,22 @@
                 <label>QQ，乐在沟通</label>
             </div>
         </div>
-        <!--endQQ-->
 
-        <!--start性别-->
+        <div class="input-group has-validation mt-1 mb-1">
+            <span class="input-group-text"
+                ><FontAwesomeIcon icon="fa-brands fa-weixin" spin-pulse
+            /></span>
+            <div class="form-floating">
+                <input
+                    v-model.trim="wechat"
+                    type="text"
+                    class="form-control"
+                    placeholder="彩蛋彩蛋彩蛋"
+                    required />
+                <label>微信，是一种生活方式</label>
+            </div>
+        </div>
+
         <div class="form-check form-check-inline">
             <input
                 v-model="gender"
@@ -94,9 +107,7 @@
                 >女<FontAwesomeIcon icon="fa-solid fa-venus" class="ps-1"
             /></label>
         </div>
-        <!--end性别-->
 
-        <!--start是否本校及学号-->
         <div class="form-check d-flex justify-content-center">
             <input
                 id="flexCheck"
@@ -123,8 +134,6 @@
             </div>
         </div>
 
-        <!--end是否本校及学号-->
-
         <!--提交按钮-->
         <div class="d-flex align-items-center justify-content-center">
             <FontAwesomeIcon
@@ -149,6 +158,7 @@ const toast = useToast()
 const username = ref('')
 const password = ref('')
 const qq = ref('')
+const weixin = ref('')
 const email = ref('')
 const gender = ref('')
 const isFDFZ = ref(false)
@@ -177,8 +187,8 @@ function handleSignUp() {
                     {
                         user_id: tempID,
                         username: username.value,
-                        email: email.value,
                         QQ: qq.value,
+                        weixin: weixin.value,
                         gender: gender.value,
                         isFDFZ: isFDFZ.value,
                         stuNumber: isFDFZ.value ? stuNumber.value : null

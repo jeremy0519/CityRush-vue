@@ -5,9 +5,9 @@ export function delay(millis) {
 }
 import { Client, Account, Databases } from 'appwrite'
 
-const project_id = '66daf470002a69b6c75a'
-export const database_id = '66db140e00346f44da95'
-export const users_collection_id = '66dc2256002852607043'
+const project_id = 'cityrun'
+export const database_id = 'database'
+export const users_collection_id = 'users_collection'
 export const base_url = 'https://124.221.115.60/v1'
 export const reset_password_url = 'http://localhost:5173/resetpassword'
 

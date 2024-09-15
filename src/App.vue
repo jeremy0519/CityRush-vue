@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img
-                    src="/favicon.png"
+                    src="/favicon.webp"
                     alt="Logo"
                     width="30"
                     height="30"
