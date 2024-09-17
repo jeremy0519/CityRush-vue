@@ -54,7 +54,7 @@
         </div>
     </main>
 
-    <footer class="d-flex justify-content-between mt-5 py-2 border-top">
+    <footer class="d-flex justify-content-between mt-5 py-2 border-top border-primary-subtle">
         <p class="text-secondary ms-1 ms-sm-3">
             Made with
             <FontAwesomeIcon class="text-danger" beat icon="fa-solid fa-heart" size="lg" /> by Team

@@ -26,6 +26,7 @@ export const store = ref({
     },
     /**获取用户信息*/
     async fetchUser() {
+        console.log('should appear once')
         await account
             .get()
             .then((response) => {
