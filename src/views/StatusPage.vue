@@ -1,0 +1,10 @@
+<template>
+    <iframe
+        id="iframe"
+        class="mt-2"
+        height="663"
+        frameborder="0"
+        width="100%"
+        src="https://monitor.hijeremy.cn/status/cityrush">
+    </iframe>
+</template>

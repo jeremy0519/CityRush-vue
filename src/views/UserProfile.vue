@@ -76,8 +76,8 @@
 
             <!--最佳名次-->
             <span
-                class="fs-3 fw-semibold mt-3 text-danger animate__animated animate__repeat-3 animate__heartBeat"
-                >{{ bestRank }} <span class="fs-6 fw-lighter text-secondary">最佳名次</span></span
+                class="fs-3 fw-semibold mt-3 animate__animated animate__repeat-3 animate__heartBeat"
+                >{{ bestRank }} <span class="fs-6 fw-lighter text-danger">最佳名次</span></span
             >
 
             <!--参加次数-->
@@ -91,16 +91,21 @@
                 <span class="text-break fs-6">{{ intro }} </span>
             </div>
 
-            <!--QQ链接-->
             <div class="d-flex align-items-end mt-1">
+                <!--学号-->
                 <div class="me-2">{{ stuNumber }}</div>
-                <div class="me-4">
+                <!--性别-->
+                <div v-if="retrieveDataComplete" class="me-4">
                     <FontAwesomeIcon :icon="genderIcon" :class="genderClass" size="xl" />
                 </div>
+
+                <!--QQ链接-->
                 <img id="showQQ" src="/qq.webp" width="24" height="28" />
                 <div class="ms-2" style="cursor: pointer" @click="copyQQ">
                     <FontAwesomeIcon icon="fa-solid fa-copy" class="text-secondary" />
                 </div>
+
+                <!--微信链接-->
                 <img id="showWechat" class="ms-2" src="/wechat.webp" width="28" height="28" />
                 <div class="ms-2" style="cursor: pointer" @click="copyWechat">
                     <FontAwesomeIcon icon="fa-solid fa-copy" class="text-secondary" />
@@ -142,6 +147,7 @@ import { useToast } from 'vue-toastification'
 const toast = useToast()
 import { Tooltip } from 'bootstrap'
 import { account, databases, database_id, users_collection_id } from '@/helper'
+import { store } from '@/store/store'
 
 const username = ref('')
 const qq = ref('')
@@ -306,9 +312,15 @@ function updatePasswordAndEmail() {
         })
 }
 function logout() {
-    account.deleteSession('current').then(() => {
-        toast.success('成功退出登录')
-        router.push({ name: 'Home' })
-    })
+    account
+        .deleteSession('current')
+        .then(() => {
+            store.value.logout()
+            toast.success('成功退出登录')
+            router.push({ name: 'Home' })
+        })
+        .catch((error) => {
+            toast.error(error.message)
+        })
 }
 </script>

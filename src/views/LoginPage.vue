@@ -44,7 +44,6 @@
                 class="text-info"
                 size="2xl"
                 @click.stop.prevent="handleLogin" />
-            <div v-if="isLoading" class="spinner-border text-success ms-2" role="status"></div>
         </div>
 
         <button
@@ -89,6 +88,7 @@ import { useToast } from 'vue-toastification'
 import { reset_password_url } from '@/helper'
 import { useRouter } from 'vue-router'
 import { account } from '@/helper'
+import { store } from '@/store/store'
 const router = useRouter()
 const toast = useToast()
 
@@ -97,24 +97,20 @@ const emailToBeSent = ref('')
 const emailToLogin = ref('')
 const passwordToLogin = ref('')
 
-const isLoading = ref(false)
-
 function handleLogin() {
     const form = document.getElementById('form1')
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        isLoading.value = true
         // 请求登录
         account
             .createEmailPasswordSession(emailToLogin.value, passwordToLogin.value)
-            .then(() => {
-                isLoading.value = false
+            .then((response) => {
+                store.value.login(response.userId)
                 toast.success('成功登录')
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
-                isLoading.value = false
                 toast.error(error.message, { timeout: false })
             })
     }

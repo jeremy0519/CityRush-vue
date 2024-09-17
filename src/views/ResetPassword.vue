@@ -9,7 +9,6 @@
                 class="text-info"
                 size="2xl"
                 @click.stop.prevent="handleReset" />
-            <div v-if="isLoading" class="spinner-border text-success ms-2" role="status"></div>
         </div>
     </form>
 </template>
@@ -24,14 +23,11 @@ const toast = useToast()
 
 const newPassword = ref('')
 
-const isLoading = ref(false)
-
 function handleReset() {
     const form = document.getElementById('form')
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        isLoading.value = true
         account
             .updateRecovery(route.query.userId, route.query.secret, newPassword.value)
             .then(() => {
@@ -39,7 +35,6 @@ function handleReset() {
                 router.push({ name: 'Login' })
             })
             .catch((error) => {
-                isLoading.value = false
                 toast.error(error.message, { timeout: false })
             })
     }

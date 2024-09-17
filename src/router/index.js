@@ -1,5 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, START_LOCATION } from 'vue-router'
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+import { store } from '@/store/store'
+
 const NotFoundComponent = () => import('@/views/NotFoundComponent.vue')
+const StatusPage = () => import('@/views/StatusPage.vue')
 const HomePage = () => import('@/views/HomePage.vue')
 const EventsList = () => import('@/views/EventsList.vue')
 const UserProfile = () => import('@/views/UserProfile.vue')
@@ -12,8 +17,6 @@ const MatchHome = () => import('@/views/match/MatchHome.vue')
 const AdminTask = () => import('@/views/admin/AdminTask.vue')
 const AdminEvent = () => import('@/views/admin/AdminEvent.vue')
 const AdminHome = () => import('@/views/admin/AdminHome.vue')
-
-import { account } from '@/helper'
 
 const routes = [
     { path: '/', component: HomePage, name: 'Home' },
@@ -52,32 +55,29 @@ const routes = [
         },
         name: 'ResetPassword'
     },
+    {
+        path: '/status',
+        component: StatusPage
+    },
     { path: '/:pathMatch(.*)', component: NotFoundComponent }
 ]
 const router = createRouter({
     history: createWebHistory(),
     routes: routes
 })
-router.beforeEach(async (to, _from) => {
-    let isLoggedIn = false
-    try {
-        const currentUser = await account.get()
-        if (!currentUser) {
-            isLoggedIn = false
-        } else {
-            isLoggedIn = true
-        }
-    } catch {
-        isLoggedIn = false
+
+router.beforeEach(async (to) => {
+    if (!store.value.isFetched) {
+        await store.value.fetchUser()
     }
-    if (to.meta.require == 'login' && !isLoggedIn) {
+    if (to.meta.require == 'login' && !store.value.isLoggedIn) {
         // 此路由需要授权，请检查是否已登录
         // 如果没有，则重定向到登录页面
-        return {
-            name: 'Login'
-        }
+        toast.warning('请先登录')
+        return { name: 'Login' }
     }
-    if (to.meta.require == 'guest' && isLoggedIn) {
+    if (to.meta.require == 'guest' && store.value.isLoggedIn) {
+        toast.warning('已经登录')
         return { name: 'Home' }
     }
 })

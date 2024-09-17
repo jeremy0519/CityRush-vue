@@ -142,7 +142,6 @@
                 class="text-info"
                 size="2xl"
                 @click.stop.prevent="handleSignUp" />
-            <div v-if="isLoading" class="spinner-border text-success ms-2" role="status"></div>
         </div>
     </form>
 </template>
@@ -153,6 +152,7 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { account, databases, database_id, users_collection_id } from '@/helper'
 const router = useRouter()
+import { store } from '@/store/store'
 const toast = useToast()
 
 const username = ref('')
@@ -164,14 +164,11 @@ const gender = ref('')
 const isFDFZ = ref(false)
 const stuNumber = ref()
 
-const isLoading = ref(false)
-
 function handleSignUp() {
     const form = document.getElementById('form')
     // 前端先检查有效性
     form.classList.add('was-validated')
     if (form.checkValidity()) {
-        isLoading.value = true
         // 注册appwrite
         const tempID = ID.unique()
         account
@@ -196,11 +193,11 @@ function handleSignUp() {
                 )
             })
             .then(() => {
+                store.value.login(tempID)
                 toast.success('成功注册')
                 router.push({ name: 'Home' })
             })
             .catch((error) => {
-                isLoading.value = false
                 toast.error(error.message, { timeout: false })
             })
     }

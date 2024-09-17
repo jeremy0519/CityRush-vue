@@ -2,7 +2,6 @@ import './scss/styles.scss'
 import 'animate.css'
 //import * as bootstrap from 'bootstrap'
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import App from './App.vue'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
@@ -21,9 +20,10 @@ import {
     faMars,
     faVenus,
     faCopy,
-    faBars
+    faBars,
+    faHeart
 } from '@fortawesome/free-solid-svg-icons'
-import { faQq, faWeixin } from '@fortawesome/free-brands-svg-icons'
+import { faQq, faWeixin, faGithub } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
 library.add(
     faUser,
@@ -36,13 +36,13 @@ library.add(
     faVenus,
     faCopy,
     faBars,
-    faWeixin
+    faWeixin,
+    faHeart,
+    faGithub
 )
 
-const pinia = createPinia()
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(router)
-app.use(pinia)
 app.use(Toast)
 app.mount('#app')
