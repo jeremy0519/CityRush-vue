@@ -1,4 +1,4 @@
-import './scss/styles.scss'
+import './style.css'
 import 'animate.css'
 //import * as bootstrap from 'bootstrap'
 import { createApp } from 'vue'
