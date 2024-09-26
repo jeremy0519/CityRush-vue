@@ -1,6 +1,6 @@
 <template>
     <header>
-        <Navbar />
+        <NavBar />
     </header>
 
     <main class="container">
@@ -11,6 +11,6 @@
 </template>
 
 <script setup>
-import Navbar from '@/components/Navbar.vue'
+import NavBar from '@/components/NavBar.vue'
 import FooterBar from '@/components/FooterBar.vue'
 </script>
