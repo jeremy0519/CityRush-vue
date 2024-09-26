@@ -2,17 +2,17 @@
     <form
         id="form"
         style="width: 300px"
-        class="mx-auto text-center mt-3"
+        class="mx-auto mt-3 text-center"
         novalidate
         @submit.prevent>
         <h4 class="mb-1">欢迎来到FDFZ城定社!!</h4>
         <h5 class="d-inline-block fw-normal">或</h5>
         <h5 class="d-inline-block fw-normal">
-            <RouterLink to="/login" class="text-primary nav-link">登录</RouterLink>
+            <RouterLink to="/login" class="nav-link text-primary">登录</RouterLink>
         </h5>
         <p class="d-inline-block fw-normal fs-5">?</p>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-solid fa-user" beat-fade
             /></span>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"><FontAwesomeIcon icon="fa-solid fa-lock" bounce /></span>
             <div class="form-floating">
                 <input
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-solid fa-envelope" beat
             /></span>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"><FontAwesomeIcon icon="fa-brands fa-qq" flip /></span>
             <div class="form-floating">
                 <input
@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-brands fa-weixin" spin-pulse
             /></span>
@@ -193,7 +193,7 @@ function handleSignUp() {
                 )
             })
             .then(() => {
-                store.value.login(tempID)
+                store.value.local_login(tempID)
                 toast.success('成功注册')
                 router.push({ name: 'Home' })
             })

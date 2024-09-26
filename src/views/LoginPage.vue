@@ -2,15 +2,15 @@
     <form
         id="form1"
         style="width: 300px"
-        class="mx-auto text-center mt-3"
+        class="mx-auto mt-3 text-center"
         novalidate
         @submit.prevent>
         <h4 class="d-inline-block">请登录或</h4>
         <h4 class="d-inline-block">
-            <RouterLink to="/register" class="text-primary nav-link">注册</RouterLink>
+            <RouterLink to="/register" class="nav-link text-primary">注册</RouterLink>
         </h4>
 
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-solid fa-envelope" beat-fade
             /></span>
@@ -37,7 +37,7 @@
                 <label>密码</label>
             </div>
         </div>
-        <div class="mt-1 d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center mt-1">
             <FontAwesomeIcon
                 role="button"
                 icon="fa-solid fa-arrow-right"
@@ -48,7 +48,7 @@
 
         <button
             type="button"
-            class="btn btn-outline-warning mt-3"
+            class="btn-outline-warning btn mt-3"
             @click="resetShowed = !resetShowed">
             忘记密码?
         </button>
@@ -58,10 +58,10 @@
         v-if="resetShowed"
         id="form2"
         style="width: 300px"
-        class="mx-auto text-center mt-5"
+        class="mx-auto mt-5 text-center"
         novalidate
         @submit.prevent>
-        <div class="input-group has-validation mt-1 mb-1">
+        <div class="input-group has-validation mb-1 mt-1">
             <span class="input-group-text"
                 ><FontAwesomeIcon icon="fa-solid fa-envelope" flip
             /></span>
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-outline-success mt-1" @click.stop.prevent="sendEmail">
+        <button type="button" class="btn-outline-success btn mt-1" @click.stop.prevent="sendEmail">
             发送密码重置邮件
         </button>
     </form>
@@ -106,7 +106,7 @@ function handleLogin() {
         account
             .createEmailPasswordSession(emailToLogin.value, passwordToLogin.value)
             .then((response) => {
-                store.value.login(response.userId)
+                store.value.local_login(response.userId)
                 toast.success('成功登录')
                 router.push({ name: 'Home' })
             })

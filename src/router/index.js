@@ -66,8 +66,9 @@ const router = createRouter({
     routes: routes
 })
 
-router.beforeEach(async (to) => {
-    if (!store.value.isFetched) {
+router.beforeEach(async (to, from) => {
+    if (from == START_LOCATION) {
+        // 初始导航
         await store.value.fetchUser()
     }
     if (to.meta.require == 'login' && !store.value.isLoggedIn) {

@@ -2,7 +2,7 @@
     <!--编辑信息的modal-->
     <div
         id="modal"
-        class="modal fade"
+        class="fade modal"
         tabindex="-1"
         data-bs-backdrop="static"
         data-bs-keyboard="false">
@@ -11,7 +11,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5">编辑个人信息</h1>
-                    <div class="text-warning ps-2">不更改请留空</div>
+                    <div class="ps-2 text-warning">不更改请留空</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body bg-success-subtle">
@@ -56,7 +56,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <div class="text-warning flex-grow-1">不更改请留空</div>
+                    <div class="flex-grow-1 text-warning">不更改请留空</div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         取消
                     </button>
@@ -72,11 +72,11 @@
     <div class="mx-auto border border-0" style="width: 350px">
         <div class="image d-flex flex-column justify-content-center align-items-center">
             <!--昵称-->
-            <span class="name mt-5 fw-bold fs-1">{{ username }}</span>
+            <span class="name fw-bold fs-1 mt-5">{{ username }}</span>
 
             <!--最佳名次-->
             <span
-                class="fs-3 fw-semibold mt-3 animate__animated animate__repeat-3 animate__heartBeat"
+                class="fs-3 fw-semibold animate__animated animate__repeat-3 animate__heartBeat mt-3"
                 >{{ bestRank }} <span class="fs-6 fw-lighter text-danger">最佳名次</span></span
             >
 
@@ -87,7 +87,7 @@
             >
 
             <!--个人简介-->
-            <div class="mt-2 mb-3">
+            <div class="mb-3 mt-2">
                 <span class="text-break fs-6">{{ intro }} </span>
             </div>
 
@@ -113,7 +113,7 @@
             </div>
 
             <!--加入时间-->
-            <span class="badge text-bg-secondary mt-2" style="cursor: default"
+            <span class="text-bg-secondary badge mt-2" style="cursor: default"
                 >加入于 {{ registerTime }}</span
             >
 
@@ -121,13 +121,13 @@
             <div class="d-inline mt-4">
                 <button
                     type="button"
-                    class="btn btn-outline-primary me-1"
+                    class="btn-outline-primary btn me-1"
                     data-bs-toggle="modal"
                     data-bs-target="#modal">
                     编辑信息
                 </button>
 
-                <button type="button" class="btn btn-outline-warning ms-1" @click="logout">
+                <button type="button" class="btn-outline-warning btn ms-1" @click="logout">
                     退出登录
                 </button>
             </div>
@@ -315,7 +315,7 @@ function logout() {
     account
         .deleteSession('current')
         .then(() => {
-            store.value.logout()
+            store.value.local_logout()
             toast.success('成功退出登录')
             router.push({ name: 'Home' })
         })
