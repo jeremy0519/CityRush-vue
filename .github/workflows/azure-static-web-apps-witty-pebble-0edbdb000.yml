@@ -19,6 +19,20 @@ jobs:
         with:
           submodules: true
           lfs: false
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.4
+        with:
+          # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
+          node-version: 22
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          # Version of pnpm to install
+          version: 9
+          # If specified, run `pnpm install`
+          run_install: true
+      - name: Build App
+        run: pnpm build
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -28,9 +42,10 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
+          app_location: "" # App source code path
           output_location: "dist" # Built app content directory - optional
+          # Skips the build step for the application source code if set to true.
+          skip_app_build: true # optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
